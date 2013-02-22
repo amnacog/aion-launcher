@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AionLauncher 3.0")]
+[assembly: AssemblyTitle("AionLauncher")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("U3J-Community")]
 [assembly: AssemblyProduct("AionLauncher")]
-[assembly: AssemblyCopyright("U3J-Community 2013")]
+[assembly: AssemblyCopyright("Copyright U3J-Community  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
