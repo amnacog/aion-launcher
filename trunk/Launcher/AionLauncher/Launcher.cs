@@ -24,7 +24,7 @@ namespace AionLauncher
             InitializeComponent();
         } //end constructor
 
-        private void Launcher_Load(object sender, EventArgs e)
+         private void Launcher_Load(object sender, EventArgs e)
         {
             if (!File.Exists("version.ini"))
             {
@@ -51,7 +51,7 @@ namespace AionLauncher
                     // Update Progress Bars etc.
                     progressBar1.Value = 100;
                     progressBar2.Value = 100;
-                    label1.Text = "Your Have the latest version";
+                    label1.Text = "You Have the latest version";
                 }
             }
             catch (Exception)
@@ -59,32 +59,32 @@ namespace AionLauncher
                 MessageBox.Show("Invalid version.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Application.Exit();
             }
-                string news = "";
-                if (Config.NEWSFEEDURL != "")
+            string news = "";
+            if (Config.NEWSFEEDURL != "")
+            {
+                try
                 {
-                    try
-                    {
-                        WebClient client = new WebClient();
-                        news = client.DownloadString(Config.NEWSFEEDURL);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    } //end try/catch
-                } //end if
-
-                if (news == "")
+                    WebClient client = new WebClient();
+                    news = client.DownloadString(Config.NEWSFEEDURL);
+                }
+                catch (Exception)
                 {
-                    news = Config.DEFAULTNEWS;
-                } //end if
+                    MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                } //end try/catch
+            } //end if
 
-                lblNews.Text = news;
+            if (news == "")
+            {
+                news = Config.DEFAULTNEWS;
+            } //end if
 
-                Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
-                StatusThread.IsBackground = true;
+            lblNews.Text = news;
 
-                StatusThread.Start();
-            } //end Launcher_Load
+            Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
+            StatusThread.IsBackground = true;
+
+            StatusThread.Start();
+        } //end Launcher_Load
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
@@ -311,28 +311,7 @@ namespace AionLauncher
             timer5.Stop();
 
         }
-
-        private string ValidateIP(string ip)
-        {
-            string returnValue = ip;
-
-            if (!System.Text.RegularExpressions.Regex.Match(ip, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
-            {
-                try
-                {
-                    returnValue = Dns.GetHostAddresses(ip)[0].ToString();
-                }
-                catch (Exception)
-                {
-                    returnValue = ip;
-                } //end try/catch
-
-            } //end if
-
-            return returnValue;
-        }
-
-        public class NewIni
+		 public class NewIni
         {
             string NL = Environment.NewLine;
 
@@ -355,6 +334,25 @@ namespace AionLauncher
                 + "Version = 3.0.0.0" + NL;
                 System.IO.File.WriteAllText(@"version.ini", toWrite);
             }
+        }
+        private string ValidateIP(string ip)
+        {
+            string returnValue = ip;
+
+            if (!System.Text.RegularExpressions.Regex.Match(ip, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
+            {
+                try
+                {
+                    returnValue = Dns.GetHostAddresses(ip)[0].ToString();
+                }
+                catch (Exception)
+                {
+                    returnValue = ip;
+                } //end try/catch
+
+            } //end if
+
+            return returnValue;
         }
         //useless
 
