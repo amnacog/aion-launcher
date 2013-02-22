@@ -73,9 +73,9 @@ namespace AionLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Sans_titre_1 {
+        internal static System.Drawing.Bitmap panel {
             get {
-                object obj = ResourceManager.GetObject("Sans titre-1", resourceCulture);
+                object obj = ResourceManager.GetObject("panel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

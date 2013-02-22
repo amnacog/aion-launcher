@@ -26,52 +26,65 @@ namespace AionLauncher
 
         private void Launcher_Load(object sender, EventArgs e)
         {
-            IniConfigSource version = new IniConfigSource("version.ini");
-            string current = version.Configs["Settings"].Get("Version");
-            // Check if we need to download files
-            if (current != "3.0.0.8")
+            if (!File.Exists("version.ini"))
             {
-                //Notify the user
-                MessageBox.Show("Your Client is Outaded or too recent. We will update it for you.");
-                //Update
-                btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
-                label1.Text = "Ready to update...";
-                btnLaunch.Text = "UPDATE";
+                var NewIni = new NewIni();
+                MessageBox.Show("Error While trying to access version.ini.. Create it for you", "Error Accessing version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            else
+
+            try
             {
-                // Update Progress Bars etc.
-                progressBar1.Value = 100;
-                progressBar2.Value = 100;
-                label1.Text = "Your Have the latest version";
-            }
-            string news = "";
-            if (Config.NEWSFEEDURL != "")
-            {
-                try
+                IniConfigSource version = new IniConfigSource("version.ini");
+                string current = version.Configs["Settings"].Get("Version");
+                // Check if we need to download files
+                if (current != "3.0.0.8")
                 {
-                    WebClient client = new WebClient();
-                    news = client.DownloadString(Config.NEWSFEEDURL);
+                    //Notify the user
+                    MessageBox.Show("Your Client is Outaded or too recent. We will update it for you.");
+                    //Update
+                    btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
+                    label1.Text = "Ready to update...";
+                    btnLaunch.Text = "UPDATE";
                 }
-                catch (Exception)
+                else
                 {
-                    MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                } //end try/catch
-            } //end if
-
-            if (news == "")
+                    // Update Progress Bars etc.
+                    progressBar1.Value = 100;
+                    progressBar2.Value = 100;
+                    label1.Text = "Your Have the latest version";
+                }
+            }
+            catch (Exception)
             {
-                news = Config.DEFAULTNEWS;
-            } //end if
+                MessageBox.Show("Invalid version.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Application.Exit();
+            }
+                string news = "";
+                if (Config.NEWSFEEDURL != "")
+                {
+                    try
+                    {
+                        WebClient client = new WebClient();
+                        news = client.DownloadString(Config.NEWSFEEDURL);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    } //end try/catch
+                } //end if
 
-            lblNews.Text = news;
+                if (news == "")
+                {
+                    news = Config.DEFAULTNEWS;
+                } //end if
 
-            Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
-            StatusThread.IsBackground = true;
+                lblNews.Text = news;
 
-            StatusThread.Start();
-        } //end Launcher_Load
+                Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
+                StatusThread.IsBackground = true;
 
+                StatusThread.Start();
+            } //end Launcher_Load
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
@@ -319,14 +332,11 @@ namespace AionLauncher
             return returnValue;
         }
 
-        public class OurConfig
+        public class NewIni
         {
-            string NL = Environment.NewLine; // New line character
-            private string configFile = "conf.ini"; // Our INI file
+            string NL = Environment.NewLine;
 
-            IConfigSource config; // Instance of our config
-
-            public OurConfig()
+            public NewIni()
             {
                 try
                 {
@@ -340,10 +350,10 @@ namespace AionLauncher
 
             private void fill_new_ini()
             {
-                string toWrite = ";conf.ini" + NL
-                + "[Options]" + NL
-                + "Version = 3.0.0.8" + NL;
-                System.IO.File.WriteAllText(@"conf.ini", toWrite);
+                string toWrite = ";version.ini" + NL
+                + "[Settings]" + NL
+                + "Version = 3.0.0.0" + NL;
+                System.IO.File.WriteAllText(@"version.ini", toWrite);
             }
         }
         //useless
