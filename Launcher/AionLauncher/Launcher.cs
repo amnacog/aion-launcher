@@ -59,32 +59,13 @@ namespace AionLauncher
                 MessageBox.Show("Invalid version.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Application.Exit();
             }
-            string news = "";
-            if (Config.NEWSFEEDURL != "")
-            {
-                try
-                {
-                    WebClient client = new WebClient();
-                    news = client.DownloadString(Config.NEWSFEEDURL);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                } //end try/catch
-            } //end if
-
-            if (news == "")
-            {
-                news = Config.DEFAULTNEWS;
-            } //end if
-
-            lblNews.Text = news;
 
             Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
             StatusThread.IsBackground = true;
-
             StatusThread.Start();
+            newsTimer.Start();
         } //end Launcher_Load
+
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
@@ -116,10 +97,10 @@ namespace AionLauncher
                         } //end if
                     } //end try/catch
                 } //end using
-
                 //only check every 5 seconds while the program is up.
                 Thread.Sleep(5000);
             } //end while
+
         } //end CheckServerStatus
 
         //this is a delegate used to access the UI from another thread
@@ -184,7 +165,32 @@ namespace AionLauncher
                 //end if
             }
         } //end btnLaunch_Click
-        
+
+        //news
+        private void news_Tick(object sender, EventArgs e)
+        {
+            string news = "";
+            if (Config.NEWSFEEDURL != "")
+            {
+                try
+                {
+                    WebClient client = new WebClient();
+                    news = client.DownloadString(Config.NEWSFEEDURL);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                } //end try/catch
+            } 
+            else
+            {
+                news = Config.DEFAULTNEWS;
+            } //end if
+
+            lblNews.Text = news;
+            newsTimer.Stop();
+        }
+
         //Proceed to update
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -311,7 +317,7 @@ namespace AionLauncher
             timer5.Stop();
 
         }
-		 public class NewIni
+		 private class NewIni
         {
             string NL = Environment.NewLine;
 
@@ -384,6 +390,6 @@ namespace AionLauncher
         private void progressBar1_Click(object sender, EventArgs e)
         {
 
-        }//end ValidateIP
+        }
     } //end class
 } //end namespace

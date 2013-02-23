@@ -52,6 +52,7 @@ namespace AionLauncher
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.newsTimer = new System.Windows.Forms.Timer(this.components);
             this.news_panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -142,6 +143,7 @@ namespace AionLauncher
             this.btnWebsite.Name = "btnWebsite";
             this.btnWebsite.Size = new System.Drawing.Size(35, 35);
             this.btnWebsite.TabIndex = 0;
+            this.btnWebsite.TabStop = false;
             this.btnWebsite.Click += new System.EventHandler(this.btnWebsite_Click);
             // 
             // pictureBox1
@@ -238,31 +240,36 @@ namespace AionLauncher
             // 
             this.timer1.Interval = 500;
             this.timer1.Tag = "";
-            this.timer1.Tick += new EventHandler(timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // timer2
             // 
             this.timer2.Interval = 1000;
             this.timer2.Tag = "";
-            this.timer2.Tick += new EventHandler(timer2_Tick);
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // timer3
             // 
             this.timer3.Interval = 500;
             this.timer3.Tag = "";
-            this.timer3.Tick += new EventHandler(timer3_Tick);
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // timer4
             // 
             this.timer4.Interval = 1000;
             this.timer4.Tag = "";
-            this.timer4.Tick += new EventHandler(timer4_Tick);
+            this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
             // 
             // timer5
             // 
             this.timer5.Interval = 500;
             this.timer5.Tag = "";
-            this.timer5.Tick += new EventHandler(timer5_Tick);
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
+            // newsTimer
+            // 
+            this.newsTimer.Interval = 1;
+            this.newsTimer.Tick += new System.EventHandler(this.news_Tick);
             // 
             // Launcher
             // 
@@ -287,7 +294,7 @@ namespace AionLauncher
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F);
             this.ForeColor = System.Drawing.Color.Transparent;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Launcher";
@@ -325,6 +332,7 @@ namespace AionLauncher
         private System.Windows.Forms.Timer timer4;
         private System.Windows.Forms.Timer timer5;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer newsTimer;
     }
 }
 
