@@ -9,7 +9,6 @@ namespace AionLauncher
         // Loading the Launcher
         public static int PORT = 2106;
         public static string HOST = "vzoneserver.dyndns.org"; //can be DNS or IP.
-        public static string WEBSITE = "http://vzoneserver.dyndns.org/aion/";
         public static string NEWSFEEDURL = "http://cmsstatic.aionfreetoplay.com/launcher_en.html";
         public static string PATCH = "http://vzoneserver.dyndns.org/aion/bin32.zip";
         public static string CC = "2";
