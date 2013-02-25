@@ -117,35 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="lblStatusText.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblServerStatus.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="pctLogo.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="btnLaunch.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="btnSettings.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnWebsite.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
-        MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAAHPEAABzxAYxOoEoAAAUWSURBVEhLlZfZS/ZFFMcNCroo
-        WimCoP+mLuqqCAoKuokQr9z3fUUoSA0VfUVBXFAUFUVNUVRwV0Rw33dz31c8zefwjoy/HpcGDs9vZs6c
-        79lnHr+EhAS/F9A7hucrQ78bajU0Y2jnNc2a3zZDfxr6xtB7L5Dn9xzoh0ZIlCGEywtpwfAlGvr0KQWe
-        Av7eHJx7IZgvpZbN2Z8eA/cF/IZhTvMFGBMTI5GRkUpRUVFKds5efHy8LwVyjKw3vQp4gQF95QUFIDo6
-        WrKysqSurk76+/tlfHxcaWBgQBoaGiQ7O1tiY2NVGR9KV5i1t1xwL/ADS+Pi4lRQQUGBTE1NyXNjbm5O
-        ioqKVEmU8ChA8t3jucDfuoz2YF9fn+IdHBwI35eXl0pXV1dycnIid3d3srGxIc3NzbK3t6e8IyMjkpyc
-        LLjfA/6zBbfAH5gFkkEZsTQxMVFmZmZUUGdnp65j9dnZmRQWFsr+/r709vZKZWWlgvf09KilbW1temZx
-        cVFSUlK8lm8ZOZ8AboEjLSgJgqbEj1FTUyNBQUHS2Nio84qKCgXA2qGhIQkMDJSOjg7dKysrU97y8nK5
-        vb2V6elpBfYkHeFUYJrDkgUmS6uqqu7DubOzIxCCGFh6eHioVuJuO2ePEFh+K6CpqUkiIiJcl28arPcB
-        /tJ1Me5BMALI3uHhYVlfX1c5k5OTOh8bG5ObmxvZ3d3VOcQeY3l5Weec3d7eltPTU0lPT9fwOfH+DuA/
-        XGurq6tVQElJiQQHB6vrSKrr62uNWWhoqIbi+PhYhbMfFhame1hMrFnjLNXAqK+v13p3gPMA/tsFnpiY
-        kKOjo/skI0ZbW1uysLCgpYXmZKyNsRXI7+zsrHoKHkvMOUteOMBDAGsftglAzHAbliEsKSlJY9nV1aVW
-        WHCAaR4hISEqlD2shZeK4CxrJCDuRlnH3csAc8voIrGACaFoSUmsrq6qu6hj1paWljSOJJvlY409eBgr
-        KyvKxxr5cn5+LhkZGS7wrk9gwDkMKM2BgQDW1tbWlAC2fMzZg4fBGc6yRi48Bqw3EK7GRWhtXY1brau7
-        u7vVrazBa11tk409wkES4lb4WBscHNSmQ/I5rl7B4nYbdJjpTmiOcBLLm1zMUcYmFzUKLzHlLG3TPUtJ
-        4XZPcg0DnOVmdW1trbqLZk+ZWK2xJC0tTZuB12JAsRKXYiFeCA8Pl/z8fJVF1/M0kVcAf+02EIRjMTQ/
-        P69xwjoGjYQ5vzbGNpbEmUEpwsNZKgQ3Z2Zmenv2DwC/a2jVgqOZtZrS4KKgPvlmcPWR7QCTOHbOHhbD
-        T4/mm9Ha2uq19h+D9RHAEG8kLXAbHwTQFouLiyUgIEDa29tVUF5enoYAL9C5/P399SHAoMfDi4svLi5U
-        QRLKc0nQKe9vJ66qDQtOAqWmpmpSMFpaWjShmJP1OTk56kZaKTcRFwZKkEBcCjYs1K7nTt41GJ+7wFj9
-        owXmlwOAcakzaJsA4QXqF4vc2NOPNzc3lZcrlVzxZDIe/fW1h//zvP3LBbdvqNLSUk2Y5wZJx538yNOn
-        2IJ6LcZqXoM8zB48WahvlMjNzVVX4gWSChodHdVnD3G1bzQfr816I/Ptp4AB5zXIw+wBuH2Z2OcsVkH2
-        icv3I8/bIi+oL4sBtvSL+V73KvA/5tuG9zfXyucsdsE/M8y8ke7r/AXAVAf/sb54DPQ5i10F+A/FX5pc
-        QwOGlgxxnVIevE6HDBUYojI+fgrQ7v0LNs5b14eyvkMAAAAASUVORK5CYII=
-</value>
-  </data>
   <data name="pictureBox1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAXEAAABYCAYAAAADU8fuAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
@@ -227,6 +214,27 @@
         yzKTBqSBG6CBqRBvWuL/B/FnBIuwvz4yAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="lstLang.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="labelLang.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="progressBar1.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="progressBar2.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label2.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label3.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
@@ -242,8 +250,17 @@
   <metadata name="timer5.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>365, 17</value>
   </metadata>
-  <metadata name="newsTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="btnMin.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="btnExit.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="timerNews.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>452, 17</value>
+  </metadata>
+  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
   <data name="$this.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

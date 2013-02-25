@@ -59,6 +59,8 @@
     <Reference Include="Ionic.Zip">
       <HintPath>D:\Program Files (x86)\Gameforge\AION Free-To-Play private\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Nini">
       <HintPath>D:\Program Files (x86)\Gameforge\AION Free-To-Play private\Nini.dll</HintPath>
     </Reference>
@@ -101,7 +103,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -114,7 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AionClient.ico" />
-    <None Include="Resources\Sans titre-1.png" />
+    <None Include="Resources\u3jsplash.png" />
+    <None Include="Resources\close.png" />
+    <None Include="Resources\minimize.png" />
+    <None Include="Resources\panel.png" />
     <None Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>

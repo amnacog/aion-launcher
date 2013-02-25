@@ -28,7 +28,6 @@ namespace AionLauncher
                 MessageBox.Show("You must copy Ionic.Zip.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Launcher());

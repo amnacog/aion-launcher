@@ -14,6 +14,7 @@ using System.Net;
 using Nini.Config;
 using Ionic.Zip;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace AionLauncher
 {
@@ -23,10 +24,32 @@ namespace AionLauncher
         {
             InitializeComponent();
         } //end constructor
+        //corner
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+		public const int HT_CAPTION = 0x2;
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
+		//drag zone
+        [DllImportAttribute ("user32.dll")]
+		public static extern int SendMessage(IntPtr hWnd, 
+			int Msg, int wParam, int lParam);
+		
+		[DllImportAttribute ("user32.dll")]
+		public static extern bool ReleaseCapture();
 
-         private void Launcher_Load(object sender, EventArgs e)
+		//call functions to move the form
+        private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!File.Exists("version.ini"))
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void Launcher_Load(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists("version.ini"))
             {
                 var NewIni = new NewIni();
                 MessageBox.Show("Error While trying to access version.ini.. Create it for you", "Error Accessing version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -43,6 +66,7 @@ namespace AionLauncher
                     MessageBox.Show("Your Client is Outaded or too recent. We will update it for you.");
                     //Update
                     btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
+                    btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
                     label1.Text = "Ready to update...";
                     btnLaunch.Text = "UPDATE";
                 }
@@ -60,10 +84,12 @@ namespace AionLauncher
                 Application.Exit();
             }
 
+            //Rounded corners
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width - 0, Height - 0, 6, 6));
             Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
             StatusThread.IsBackground = true;
             StatusThread.Start();
-            newsTimer.Start();
+            timerNews.Start();
         } //end Launcher_Load
 
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
@@ -114,19 +140,12 @@ namespace AionLauncher
             else
             {
                 control.GetType().InvokeMember(propertyName, System.Reflection.BindingFlags.SetProperty, null, control, new object[] { propertyValue });
-            } //end if
+            }
+
         } //end SetControlPropertyThreadSafe
-
-        //loads up the WEBSITE specified in the config class in the users default browser
-        private void btnWebsite_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(Config.WEBSITE);
-        } //end btnWebsite_Click
-
-        //this launches the actual game
+        ////this launches the actual game
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            if (lstLang.SelectedItem == "EN") { lstLang.SelectedItem = "enu"; }
             if (btnLaunch.Text == "UPDATE")
             {
                 timer1.Start();
@@ -135,13 +154,24 @@ namespace AionLauncher
             }
             else
             {
+                var langEn = "EN";
+              if("".Equals(lstLang.SelectedItem) || lstLang.SelectedItem == null) 
+              { 
+                  MessageBox.Show("Language not specified","Language Error", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+              }
+              else 
+              {
+                  if (lstLang.SelectedItem.Equals(langEn)) 
+                  {
+                      lstLang.SelectedItem = "enu"; 
+                  }
                 //first, check to see if aion.bin can be found
                 if (System.IO.File.Exists("bin32\\aion.bin"))
                 {
                     System.Diagnostics.ProcessStartInfo aionLauncher =
                     new System.Diagnostics.ProcessStartInfo(
                     "cmd.exe",
-                     "/c" + "\"bin32\\aion.bin\" -ip:" + ValidateIP(Config.HOST) + " -ng -port:" + Config.PORT + " -cc:1 -noauthgg -lang:" + lstLang.SelectedItem + " -noweb -nowebshop -ingameshop");
+                     "/c" + "\"bin32\\aion.bin\" -ip:" + ValidateIP(Config.HOST) + " -ng -port:" + Config.PORT + " -cc:" + Config.CC + " -lang:" + lstLang.SelectedItem + Config.OPTIONS);
 
                     aionLauncher.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     aionLauncher.CreateNoWindow = true;
@@ -164,11 +194,13 @@ namespace AionLauncher
                 }
                 //end if
             }
-        } //end btnLaunch_Click
+          } //end btnLaunch_Click
+        }
 
         //news
         private void news_Tick(object sender, EventArgs e)
         {
+            var sw = Stopwatch.StartNew();
             string news = "";
             if (Config.NEWSFEEDURL != "")
             {
@@ -181,14 +213,14 @@ namespace AionLauncher
                 {
                     MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 } //end try/catch
-            } 
+            }
             else
             {
                 news = Config.DEFAULTNEWS;
             } //end if
-
             lblNews.Text = news;
-            newsTimer.Stop();
+            timerNews.Stop();
+            sw.Stop();
         }
 
         //Proceed to update
@@ -309,7 +341,8 @@ namespace AionLauncher
 
             label1.Text = "Update Complete...";
             btnLaunch.Enabled = true;
-            btnLaunch.BackColor = System.Drawing.Color.MediumBlue; 
+            btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
+            btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
             btnLaunch.Text = "       RUN         GAME";
             btnLaunch.UseWaitCursor = false;
 
@@ -317,6 +350,7 @@ namespace AionLauncher
             timer5.Stop();
 
         }
+
 		 private class NewIni
         {
             string NL = Environment.NewLine;
@@ -360,34 +394,34 @@ namespace AionLauncher
 
             return returnValue;
         }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Working...", "Not In this version", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            while(this.Opacity != 0)
+        {
+        this.Opacity -= 0.05;
+        Thread.Sleep(10);
+        }
+            Application.Exit();
+        }
+        private void btnMin_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
         //useless
+        private void pctLogo_Click(object sender, EventArgs e){}
+        private void news_panel_Paint(object sender, PaintEventArgs e){}
+        private void labelLang_Click(object sender, EventArgs e){}
+        private void lstLang_SelectedIndexChanged(object sender, EventArgs e){}
+        private void label1_Click(object sender, EventArgs e){}
+        private void progressBar1_Click(object sender, EventArgs e){}
+        private void lblNews_Click(object sender, EventArgs e){}
 
-        private void pctLogo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void news_panel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void labelLang_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lstLang_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar1_Click(object sender, EventArgs e)
+        private void timer6_Tick(object sender, EventArgs e)
         {
 
         }

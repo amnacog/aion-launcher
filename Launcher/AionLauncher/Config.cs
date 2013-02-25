@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nini.Config;
 
 namespace AionLauncher
 {
-    static class Config
-    {
+         static class Config{
+        // Loading the Launcher
         public static int PORT = 2106;
         public static string HOST = "vzoneserver.dyndns.org"; //can be DNS or IP.
         public static string WEBSITE = "http://vzoneserver.dyndns.org/aion/";
         public static string NEWSFEEDURL = "http://cmsstatic.aionfreetoplay.com/launcher_en.html";
         public static string PATCH = "http://vzoneserver.dyndns.org/aion/bin32.zip";
+        public static string CC = "2";
+        public static string OPTIONS = "-noauthgg -ls -noweb -nowebshop -ingameshop";
 
         public static string DEFAULTNEWS = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" +
         "<html xmlns=\"http://www.w3.org/1999/xhtml\">" +
@@ -48,6 +51,5 @@ namespace AionLauncher
         "<div id=\"news\"></div>" +
         "</body>" +
         "</html>";
-
-    } //end class
+      }//end class
 } //end namespace
