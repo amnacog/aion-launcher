@@ -20,6 +20,7 @@ namespace AionLauncher
 {
     public partial class Launcher : Form
     {
+
         public Launcher()
         {
             InitializeComponent();
@@ -49,12 +50,51 @@ namespace AionLauncher
 
         private void Launcher_Load(object sender, EventArgs e)
         {
+            //Test launcher.ini (if all filled and set lang selectbox)
+            if (!System.IO.File.Exists("launcher.ini"))
+            {
+                var NewIniConf = new NewIniConf();
+                MessageBox.Show("This is the first time you launch the Launcher, Generating config files..", "First Time (step 1)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Thread.Sleep(500);
+                MessageBox.Show("Before using this Launcher you must modificate your config file (launcher.ini)", "First Time (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                System.Diagnostics.Process.Start(@"launcher.ini");
+                Application.Exit();
+            }
+            try
+            {
+            //new instance of nini
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig connectionSection = launcher.Configs["Connection"];
+            IConfig gameSection = launcher.Configs["Game"];
+            IConfig patchSection = launcher.Configs["Patch"];
+            IConfig miscSection = launcher.Configs["Misc"];
+            string HOST = connectionSection.Get("IP"); //can be DNS or IP.
+            int PORT = connectionSection.GetInt("LoginPort");
+            string OPTIONS = gameSection.Get("Options");
+            string LANG = gameSection.Get("Language");
+            int CC = gameSection.GetInt("CountryCode");
+            string PATCH = patchSection.Get("Bin");
+            string NEWSFEEDURL = miscSection.Get("BannerUrl");
+
+            //set the lang selectbox
+            LANG = LANG.Replace("fr", "FR");
+            LANG = LANG.Replace("de", "DE");
+            LANG = LANG.Replace("en", "EN");
+            LANG = LANG.Replace("es", "ES");
+            LANG = LANG.Replace("jp", "JP");
+            this.lstLang.Text = LANG;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Invalid launcher.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Application.Exit();
+            }
+
             if (!System.IO.File.Exists("version.ini"))
             {
                 var NewIni = new NewIni();
                 MessageBox.Show("Error While trying to access version.ini.. Create it for you", "Error Accessing version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
             try
             {
                 IniConfigSource version = new IniConfigSource("version.ini");
@@ -89,25 +129,31 @@ namespace AionLauncher
             Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
             StatusThread.IsBackground = true;
             StatusThread.Start();
-            timerNews.Start();
         } //end Launcher_Load
 
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
+            //Begin new instance nini
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig connectionSection = launcher.Configs["Connection"];
+
+            //Get string-int
+            string HOST = connectionSection.Get("IP");
+            int PORT = connectionSection.GetInt("LoginPort");
             while (true)
             {
                 using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                 {
                     try
                     {
-                        if ((Config.HOST == string.Empty || Config.HOST == null))
+                        if ((HOST == string.Empty || HOST == null))
                         {
-                            MessageBox.Show("Please make sure your HOST is set in Config.cs", "Invalid HOST", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Please make sure your HOST is set in Version.ini", "Invalid HOST", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
                         } //end if
 
-                        socket.Connect(Config.HOST, Config.PORT);
+                        socket.Connect(HOST, PORT);
                         socket.Close();
 
                         SetControlPropertyThreadSafe(lblServerStatus, "Text", "Online");
@@ -126,7 +172,6 @@ namespace AionLauncher
                 //only check every 5 seconds while the program is up.
                 Thread.Sleep(5000);
             } //end while
-
         } //end CheckServerStatus
 
         //this is a delegate used to access the UI from another thread
@@ -142,10 +187,25 @@ namespace AionLauncher
                 control.GetType().InvokeMember(propertyName, System.Reflection.BindingFlags.SetProperty, null, control, new object[] { propertyValue });
             }
 
-        } //end SetControlPropertyThreadSafe
-        ////this launches the actual game
+        }//end SetControlPropertyThreadSafe
+        ////this launches the actual Play
         private void btnLaunch_Click(object sender, EventArgs e)
         {
+            //Begin new instance nini
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig connectionSection = launcher.Configs["Connection"];
+            IConfig PlaySection = launcher.Configs["Game"];
+            IConfig patchSection = launcher.Configs["Patch"];
+
+            //Get string-int
+            string HOST = connectionSection.Get("IP");
+            int PORT = connectionSection.GetInt("LoginPort");
+            string OPTIONS = PlaySection.Get("Options");
+            string LANG = PlaySection.Get("Language");
+            int CC = PlaySection.GetInt("CountryCode");
+
+            ChangeConf(null, null);
+
             if (btnLaunch.Text == "UPDATE")
             {
                 timer1.Start();
@@ -171,7 +231,7 @@ namespace AionLauncher
                     System.Diagnostics.ProcessStartInfo aionLauncher =
                     new System.Diagnostics.ProcessStartInfo(
                     "cmd.exe",
-                     "/c" + "\"bin32\\aion.bin\" -ip:" + ValidateIP(Config.HOST) + " -ng -port:" + Config.PORT + " -cc:" + Config.CC + " -lang:" + lstLang.SelectedItem + Config.OPTIONS);
+                     "/c" + "\"bin32\\aion.bin\" -ip:" + ValidateIP(HOST) + " -ng -port:" + PORT + " -cc:" + CC + " -lang:" + lstLang.SelectedItem + OPTIONS);
 
                     aionLauncher.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     aionLauncher.CreateNoWindow = true;
@@ -200,29 +260,25 @@ namespace AionLauncher
         //news
         private void news_Tick(object sender, EventArgs e)
         {
-            var sw = Stopwatch.StartNew();
-            string news = "";
-            if (Config.NEWSFEEDURL != "")
-            {
-                try
-                {
-                    WebClient client = new WebClient();
-                    news = client.DownloadString(Config.NEWSFEEDURL);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("An error occurred while attempting to access the news feed.", "Error Accessing News", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                } //end try/catch
-            }
-            else
-            {
-                news = Config.DEFAULTNEWS;
-            } //end if
-            lblNews.Text = news;
-            timerNews.Stop();
-            sw.Stop();
-        }
+            //new instance nini
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig miscSection = launcher.Configs["Misc"];
 
+            //Get string
+            string NEWSFEEDURL = miscSection.Get("BannerUrl");
+
+            if (NEWSFEEDURL == null || NEWSFEEDURL == "")
+            {
+                    string news = "";
+                    this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
+                    this.lblNews.Text = news;
+
+            }else{
+                this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
+                this.BannerBrowser.Visible = true;
+            }
+          NewsTimer.Stop();
+        }
         //Proceed to update
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -298,12 +354,16 @@ namespace AionLauncher
 
         private void timer4_Tick(object sender, EventArgs e)
         {
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig patchSection = launcher.Configs["Patch"];
+            string PATCH = patchSection.Get("Bin");
+
             // Label change
             label1.Text = "Downloading bin32.zip...";
 
             // Download Files
             WebClient webClient = new WebClient();
-            webClient.DownloadFile(Config.PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
+            webClient.DownloadFile(PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
 
             // Progress bar update
             progressBar1.Value = 0;
@@ -375,6 +435,52 @@ namespace AionLauncher
                 System.IO.File.WriteAllText(@"version.ini", toWrite);
             }
         }
+         //Write New launcher.ini conf
+         private class NewIniConf
+         {
+             string NL = Environment.NewLine;
+
+             public NewIniConf()
+             {
+                 try
+                 {
+                     IniConfigSource config = new IniConfigSource("launcher.ini");
+                 }
+                 catch (Exception)
+                 {
+                     fill_new_iniConf();
+                 }
+             }
+
+             private void fill_new_iniConf()
+             {
+                 string toWrite = ";Configuration file for the launcher" + NL
+                 + ";This file has been generated by the launcher, for any problem please report to the about section" + NL
+                 + "[Connection]" + NL
+                 + ";Your login ip/dns server (can be game server ip/dns too)" + NL
+                 + "IP = vzoneserver.dyndns.org" + NL
+                 + ";Your login port server (2106 by default)" + NL
+                 + "LoginPort = 2106" + NL
+                 + "" + NL
+                 + "[Game]" + NL
+                 + ";(string) Place here your game options" + NL
+                 + "Options = -noauthgg -ls -noweb -nowebshop -ingameshop" + NL
+                 + ";(2string) Place here the launguage of your client, one of these : en, de, fr, es, jp" + NL
+                 + "Language = fr" + NL
+                 + ";(2int) place here the country code of the server" + NL
+                 + "CountryCode = 2" + NL
+                 + "" + NL
+                 + "[Patch]" + NL
+                 + ";(url/bin32.zip) Place here your patch for the client, must be a zip archive" + NL
+                 + "Bin = http://vzoneserver.dyndns.org/aion/bin32.zip" + NL
+                 + "" + NL
+                 + "[Misc]" + NL
+                 + ";(url) Place here the webpage for the banner" + NL
+                 + "BannerUrl = http://cmsstatic.aionfreetoplay.com/launcher_en.html" + NL;
+                System.IO.File.WriteAllText(@"launcher.ini", toWrite);
+             }
+         }
+
         private string ValidateIP(string ip)
         {
             string returnValue = ip;
@@ -412,15 +518,56 @@ namespace AionLauncher
         {
             this.WindowState = FormWindowState.Minimized;
         }
+        //Launch Nav
+
+        //future update
+        //private void BannerBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        //{ 
+        //    IniConfigSource launcher = new IniConfigSource("launcher.ini");
+        //    IConfig miscSection = launcher.Configs["Misc"];
+        //    string NEWSFEEDURL = miscSection.Get("BannerUrl");
+        //    int i;
+        //    for (i = 0; i < BannerBrowser.Document.Links.Count; i++)
+        //    {
+        //        if (!BannerBrowser.Document.Links.Equals(NEWSFEEDURL))
+        //        {
+        //          var navigateUrl = e.Url.ToString();
+        //          e.Cancel = true;
+        //           System.Diagnostics.Process.Start(navigateUrl);
+
+        //        }
+        //    }
+        //}
+        private void Getlink(object sender, WebBrowserNavigatingEventArgs e)
+        {
+
+            MessageBox.Show("Captured URL :" + e.Url.ToString());
+        }
+
+        //Change lang in conf
+        private void ChangeConf(object sender, EventArgs e) {
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig gameSection = launcher.Configs["Game"];
+            string LANG = gameSection.Get("Language");
+            //set the lang selectbox
+            LANG = LANG.Replace("fr", "FR");
+            LANG = LANG.Replace("de", "DE");
+            LANG = LANG.Replace("en", "EN");
+            LANG = LANG.Replace("es", "ES");
+            LANG = LANG.Replace("jp", "JP");
+            if (!lstLang.SelectedItem.Equals(LANG)) 
+                  {
+                    gameSection.Set("Language", lstLang.SelectedItem);
+                    launcher.Save();
+                  }
+        }
         //useless
         private void pctLogo_Click(object sender, EventArgs e){}
         private void news_panel_Paint(object sender, PaintEventArgs e){}
         private void labelLang_Click(object sender, EventArgs e){}
-        private void lstLang_SelectedIndexChanged(object sender, EventArgs e){}
         private void label1_Click(object sender, EventArgs e){}
         private void progressBar1_Click(object sender, EventArgs e){}
         private void lblNews_Click(object sender, EventArgs e){}
-
         private void timer6_Tick(object sender, EventArgs e)
         {
 

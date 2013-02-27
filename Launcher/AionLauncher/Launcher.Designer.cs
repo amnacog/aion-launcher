@@ -35,7 +35,6 @@ namespace AionLauncher
             this.lblStatusText = new System.Windows.Forms.Label();
             this.lblServerStatus = new System.Windows.Forms.Label();
             this.news_panel = new System.Windows.Forms.Panel();
-            this.lblNews = new HtmlRenderer.HtmlLabel();
             this.pctLogo = new System.Windows.Forms.PictureBox();
             this.btnLaunch = new Glass.GlassButton();
             this.btnSettings = new Glass.GlassButton();
@@ -55,10 +54,11 @@ namespace AionLauncher
             this.btnMin = new Glass.GlassButton();
             this.btnExit = new Glass.GlassButton();
             this.appName = new System.Windows.Forms.Label();
+            this.lblNews = new System.Windows.Forms.Panel();
             this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.grap = new Microsoft.VisualBasic.PowerPacks.RectangleShape();
-            this.timerNews = new System.Windows.Forms.Timer(this.components);
-            this.news_panel.SuspendLayout();
+            this.BannerBrowser = new System.Windows.Forms.WebBrowser();
+            this.NewsTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -92,29 +92,13 @@ namespace AionLauncher
             this.news_panel.BackColor = System.Drawing.Color.Transparent;
             this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplash;
             this.news_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.news_panel.Controls.Add(this.lblNews);
             this.news_panel.ForeColor = System.Drawing.Color.Transparent;
-            this.news_panel.Location = new System.Drawing.Point(12, 61);
+            this.news_panel.Location = new System.Drawing.Point(12, 60);
             this.news_panel.Margin = new System.Windows.Forms.Padding(0);
             this.news_panel.Name = "news_panel";
             this.news_panel.Size = new System.Drawing.Size(590, 242);
             this.news_panel.TabIndex = 4;
             this.news_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.news_panel_Paint);
-            // 
-            // lblNews
-            // 
-            this.lblNews.BackColor = System.Drawing.Color.Transparent;
-            this.lblNews.BaseStylesheet = null;
-            this.lblNews.Bridge = null;
-            this.lblNews.ForeColor = System.Drawing.Color.White;
-            this.lblNews.Location = new System.Drawing.Point(0, 0);
-            this.lblNews.MaximumSize = new System.Drawing.Size(590, 242);
-            this.lblNews.MinimumSize = new System.Drawing.Size(590, 242);
-            this.lblNews.Name = "lblNews";
-            this.lblNews.Size = new System.Drawing.Size(590, 242);
-            this.lblNews.TabIndex = 0;
-            this.lblNews.Text = " ";
-            this.lblNews.Click += new System.EventHandler(this.lblNews_Click);
             // 
             // pctLogo
             // 
@@ -185,7 +169,6 @@ namespace AionLauncher
             this.lstLang.Size = new System.Drawing.Size(43, 21);
             this.lstLang.TabIndex = 8;
             this.lstLang.Text = "EN";
-            this.lstLang.SelectedIndexChanged += new System.EventHandler(this.lstLang_SelectedIndexChanged);
             // 
             // labelLang
             // 
@@ -327,6 +310,14 @@ namespace AionLauncher
             this.appName.TabIndex = 1;
             this.appName.Text = "Game Launch";
             // 
+            // lblNews
+            // 
+            this.lblNews.BackColor = System.Drawing.SystemColors.Window;
+            this.lblNews.Location = new System.Drawing.Point(0, 0);
+            this.lblNews.Name = "lblNews";
+            this.lblNews.Size = new System.Drawing.Size(0, 0);
+            this.lblNews.TabIndex = 0;
+            // 
             // shapeContainer1
             // 
             this.shapeContainer1.Location = new System.Drawing.Point(0, 0);
@@ -351,10 +342,27 @@ namespace AionLauncher
             this.grap.Size = new System.Drawing.Size(624, 62);
             this.grap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drag_MouseDown);
             // 
-            // timerNews
+            // BannerBrowser
             // 
-            this.timerNews.Interval = 3000;
-            this.timerNews.Tick += new System.EventHandler(this.news_Tick);
+            this.BannerBrowser.AllowNavigation = false;
+            this.BannerBrowser.AllowWebBrowserDrop = false;
+            this.BannerBrowser.CausesValidation = false;
+            this.BannerBrowser.IsWebBrowserContextMenuEnabled = false;
+            this.BannerBrowser.Location = new System.Drawing.Point(13, 61);
+            this.BannerBrowser.Name = "BannerBrowser";
+            this.BannerBrowser.ScrollBarsEnabled = false;
+            this.BannerBrowser.Size = new System.Drawing.Size(588, 240);
+            this.BannerBrowser.TabIndex = 18;
+            this.BannerBrowser.TabStop = false;
+            this.BannerBrowser.Visible = false;
+            this.BannerBrowser.WebBrowserShortcutsEnabled = false;
+            //future update this.BannerBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.BannerBrowser_DocumentCompleted);
+            // 
+            // NewsTimer
+            // 
+            this.NewsTimer.Enabled = true;
+            this.NewsTimer.Interval = 2000;
+            this.NewsTimer.Tick += new System.EventHandler(this.news_Tick);
             // 
             // Launcher
             // 
@@ -364,6 +372,7 @@ namespace AionLauncher
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(620, 409);
+            this.Controls.Add(this.BannerBrowser);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -391,8 +400,6 @@ namespace AionLauncher
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Aion Launcher";
             this.Load += new System.EventHandler(this.Launcher_Load);
-            this.news_panel.ResumeLayout(false);
-            this.news_panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
@@ -426,8 +433,9 @@ namespace AionLauncher
         private System.Windows.Forms.Timer timer1;
         private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer1;
         private Microsoft.VisualBasic.PowerPacks.RectangleShape grap;
-        private System.Windows.Forms.Timer timerNews;
-        private HtmlRenderer.HtmlLabel lblNews;
+        private System.Windows.Forms.Panel lblNews;
+        private System.Windows.Forms.WebBrowser BannerBrowser;
+        private System.Windows.Forms.Timer NewsTimer;
     }
 }
 

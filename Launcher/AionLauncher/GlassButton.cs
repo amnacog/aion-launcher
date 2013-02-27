@@ -45,7 +45,10 @@ namespace Glass
         /// <summary> 
         /// Gets or sets the background color of the control. 
         /// </summary> 
-        /// <returns>A <see cref="T:System.Drawing.Color" /> value representing the background color.</returns> 
+        /// <
+        /// 
+        /// 
+        /// s>A <see cref="T:System.Drawing.Color" /> value representing the background color.</returns> 
         [DefaultValue(typeof(Color), "Black")]
         public new Color BackColor
         {
