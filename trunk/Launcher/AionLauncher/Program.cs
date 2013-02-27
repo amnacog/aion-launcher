@@ -12,25 +12,20 @@ namespace AionLauncher
         [STAThread]
         static void Main()
         {
-            //check to see if one of the DLL dependency is missing -- HtmlRendered.dll
-            if (!System.IO.File.Exists("HtmlRenderer.dll"))
-            {
-                MessageBox.Show("You must copy HtmlRenderer.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            } //end if
-            if (!System.IO.File.Exists("Ionic.Zip.dll"))
-            {
-                MessageBox.Show("You must copy Ionic.Zip.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (!System.IO.File.Exists("Nini.dll"))
-            {
-                MessageBox.Show("You must copy Ionic.Zip.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Launcher());
+            //check to see if one of the DLL dependency is missing 
+                if (!System.IO.File.Exists("Ionic.Zip.dll"))
+                {
+                    MessageBox.Show("You must copy Ionic.Zip.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!System.IO.File.Exists("Nini.dll"))
+                {
+                    MessageBox.Show("You must copy Ionic.Zip.dll into your aion folder.", "Error loading DLL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Launcher());
         } //end Main
     } //end class
 } //end namespace
