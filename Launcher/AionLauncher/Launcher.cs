@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,24 +6,54 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Drawing.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Reflection;
 using Nini.Config;
 using Ionic.Zip;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Json;
 
 namespace AionLauncher
 {
     public partial class Launcher : Form
     {
 
+        protected override CreateParams CreateParams
+        {
+            get{ var parms = base.CreateParams; parms.Style &= ~0x02000000;return parms;}
+        }
+
         public Launcher()
         {
+            //Load Embed Dlls
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(this.GetType().Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
+
+            //Init Controls
             InitializeComponent();
+
+            //Load Fonts
+            LoadFont();
+            btnLaunch.Font = new Font(private_fonts.Families[0], 9.5F);
+            btnLaunch.UseCompatibleTextRendering = true;
+        
         } //end constructor
+
         //corner
         public const int WM_NCLBUTTONDOWN = 0xA1;
 		public const int HT_CAPTION = 0x2;
@@ -32,11 +61,14 @@ namespace AionLauncher
         private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
 		//drag zone
         [DllImportAttribute ("user32.dll")]
-		public static extern int SendMessage(IntPtr hWnd, 
-			int Msg, int wParam, int lParam);
+		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 		
 		[DllImportAttribute ("user32.dll")]
 		public static extern bool ReleaseCapture();
+
+        [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
+        public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
+        string lpFileName);
 
 		//call functions to move the form
         private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -47,9 +79,25 @@ namespace AionLauncher
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+        
+        //Create NewPrivate Font
+        PrivateFontCollection private_fonts = new PrivateFontCollection();
+        private void LoadFont()
+        {
+            string ressource = "AionLauncher.TCCEB.TTF";
+            Stream fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ressource);
+            System.IntPtr data = Marshal.AllocCoTaskMem((int)fontStream.Length);
+            byte[] fontdata = new byte[fontStream.Length];
+            fontStream.Read(fontdata, 0, (int)fontStream.Length);
+            Marshal.Copy(fontdata, 0, data, (int)fontStream.Length);
+            private_fonts.AddMemoryFont(data, (int)fontStream.Length);
+            fontStream.Close();
+            Marshal.FreeCoTaskMem(data);
+        }
 
         private void Launcher_Load(object sender, EventArgs e)
         {
+
             //Test launcher.ini (if all filled and set lang selectbox)
             if (!System.IO.File.Exists("launcher.ini"))
             {
@@ -97,6 +145,11 @@ namespace AionLauncher
             }
             try
             {
+                if (Environment.OSVersion.Version >= new Version(6, 0))
+                {
+                    this.Opacity = 0f;
+                    Application.DoEvents();
+                }
                 IniConfigSource version = new IniConfigSource("version.ini");
                 string current = version.Configs["Settings"].Get("Version");
                 // Check if we need to download files
@@ -112,6 +165,12 @@ namespace AionLauncher
                 }
                 else
                 {
+                    if (Environment.OSVersion.Version >= new Version(6, 0))
+                    {
+                        this.Opacity = 0f;
+                        Application.DoEvents();
+                    }
+
                     // Update Progress Bars etc.
                     progressBar1.Value = 100;
                     progressBar2.Value = 100;
@@ -126,10 +185,21 @@ namespace AionLauncher
 
             //Rounded corners
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width - 0, Height - 0, 6, 6));
+            if (Environment.OSVersion.Version >= new Version(6, 0))
+            {
+                this.Opacity = 100.0f;
+                this.ShowInTaskbar = true;
+            }
             Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
             StatusThread.IsBackground = true;
             StatusThread.Start();
+            Thread CheckVersionThread = new Thread(new ThreadStart(this.CheckVersions));
+            CheckVersionThread.IsBackground = true;
+            CheckVersionThread.Start();
+
         } //end Launcher_Load
+
+
 
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
@@ -239,9 +309,18 @@ namespace AionLauncher
                     {
                         System.Diagnostics.Process.Start(aionLauncher);
 
-                        //wait 5 seconds, then close the launcher
-                        Thread.Sleep(1000);
-                        this.Close();
+                        //wait 0.5 seconds, then close the launcher
+                        Thread.Sleep(500);
+                         if (Environment.OSVersion.Version >= new Version(6, 0))
+                         {
+                             while (this.Opacity != 0)
+                             {
+                                 this.Opacity -= 0.05;
+                                 Thread.Sleep(10);
+                             }
+                         }
+                         Application.Exit();
+        
                     }
                     catch (Exception ex)
                     {
@@ -282,27 +361,43 @@ namespace AionLauncher
         //Proceed to update
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // New
-
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+            IConfig patchSection = launcher.Configs["Patch"];
+            string PATCH = patchSection.Get("Bin");
             // Label change
-            label1.Text = "Updating INI...";
+            label1.Text = "Checking Server...";
+            DialogResult result = DialogResult.Retry;
+            while (result == DialogResult.Retry)
+            {
+            using (var socketUpdate = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            {
+                try
+                {
+                    socketUpdate.Connect(PATCH, 80);
+                    socketUpdate.Close();
+                }
+                catch (SocketException)
+                    {
+                      label1.Text = "Connection Error";
+                      timer1.Stop();
+                      result =  MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                      label1.Text = "Ready to Update..";
+                      btnLaunch.Enabled = true;
+                      btnLaunch.UseWaitCursor = false;
+                    }
+                }
+            } 
+            if (result != DialogResult.Cancel)
+            {
+                label1.Text = "Connection OK";
+                // Progress bar update
+                progressBar1.Value = 100;
+                progressBar2.Value = 25;
 
-            // Get configs
-            IniConfigSource version = new IniConfigSource("version.ini");
-            version.Configs["Settings"].Set("Version", "3.0.0.8");
-            version.Save("version.ini");
-      
-
-            // Instead of downloading a new file, we just rewrite the INI
-
-            // Progress bar update
-            progressBar1.Value = 100;
-            progressBar2.Value = 25;
-
-            // Pause Timer
-            timer1.Stop();
-            timer2.Start();
-
+                // Pause Timer
+                timer1.Stop();
+                timer2.Start();
+            }
         }
 
         // Timer 2 for updates
@@ -395,6 +490,12 @@ namespace AionLauncher
                 }
             }
 
+            label1.Text = "Updating ini...";
+            // Get configs
+            IniConfigSource version = new IniConfigSource("version.ini");
+            version.Configs["Settings"].Set("Version", "3.0.0.8");
+            version.Save("version.ini");
+
             // Progress bar update
             progressBar1.Value = 100;
             progressBar2.Value = 100;
@@ -403,7 +504,7 @@ namespace AionLauncher
             btnLaunch.Enabled = true;
             btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
             btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
-            btnLaunch.Text = "       RUN         GAME";
+            btnLaunch.Text = "RUN         GAME";
             btnLaunch.UseWaitCursor = false;
 
             // Pause Timer
@@ -481,6 +582,7 @@ namespace AionLauncher
              }
          }
 
+        //Validate Ip/Dns
         private string ValidateIP(string ip)
         {
             string returnValue = ip;
@@ -494,17 +596,90 @@ namespace AionLauncher
                 catch (Exception)
                 {
                     returnValue = ip;
-                } //end try/catch
+                }
 
-            } //end if
+            }
 
             return returnValue;
         }
 
+        public class JsonHelper
+        {
+            public static T JsonDeserialize<T>(string jsonString)
+            {
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
+                MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+                T obj = (T)ser.ReadObject(ms);
+                return obj;
+            }
+        }
+
+        public class JsonParser
+        {
+           public string version { get; set; }
+        }
+
+        //CheckVersion (Please do not change)
+        private void CheckVersions()
+        {
+            if (Environment.OSVersion.Version >= new Version(6, 0))
+            {
+                WebClient getJson = new WebClient();
+                string json = getJson.DownloadString("http://aion-launcher-beta.googlecode.com/svn/trunk/Launcher/Parser/index.php");
+                JsonParser LauncherJson = JsonHelper.JsonDeserialize<JsonParser>(json);
+
+                string currentVersion = Application.ProductVersion;
+                string getVersion = LauncherJson.version;
+
+
+                if (currentVersion != getVersion)
+                {
+
+                    this.Loading.Image = global::AionLauncher.Properties.Resources.update;
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(514, 393));
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Text", "Update available");
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkColor", System.Drawing.SystemColors.MenuHighlight);
+                    MessageBox.Show("A new version of the launcher is available", "New Version " + getVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                }
+                else
+                {
+                    this.Loading.Image = global::AionLauncher.Properties.Resources.check;
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(560, 393));
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Size", new System.Drawing.Size(40, 13));
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Text", currentVersion);
+
+                }
+            }
+            else
+            {
+                this.Loading.Image = null;
+                SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(535, 393));
+                SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                SetControlPropertyThreadSafe(CheckVersionLbl, "Text", "Incompatible");
+                this.CheckVersionLbl.LinkColor = System.Drawing.Color.Red;
+            }
+        }
+
+        private void CheckVersionLbl_Click(object sender, EventArgs e)
+        {
+            if (CheckVersionLbl.Text == "Update available")
+            {
+                System.Diagnostics.Process.Start("https://code.google.com/p/aion-launcher-beta/");
+            }
+            if (CheckVersionLbl.Text == "Incompatible")
+            {
+                MessageBox.Show("The Version checker is incompatible with Windows XP, Please update your Os aged over 10 years", "Incompatible OS", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Working...", "Not In this version", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            var SettingsWindow = new Settings();
+            SettingsWindow.Show();
         }
+
         private void btnExit_Click(object sender, EventArgs e)
         {
             while(this.Opacity != 0)
@@ -518,30 +693,18 @@ namespace AionLauncher
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
         //Launch Nav
-
-        //future update
-        //private void BannerBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        //{ 
-        //    IniConfigSource launcher = new IniConfigSource("launcher.ini");
-        //    IConfig miscSection = launcher.Configs["Misc"];
-        //    string NEWSFEEDURL = miscSection.Get("BannerUrl");
-        //    int i;
-        //    for (i = 0; i < BannerBrowser.Document.Links.Count; i++)
-        //    {
-        //        if (!BannerBrowser.Document.Links.Equals(NEWSFEEDURL))
-        //        {
-        //          var navigateUrl = e.Url.ToString();
-        //          e.Cancel = true;
-        //           System.Diagnostics.Process.Start(navigateUrl);
-
-        //        }
-        //    }
-        //}
-        private void Getlink(object sender, WebBrowserNavigatingEventArgs e)
+        private void BannerBrowser_NewWindow(object sender, CancelEventArgs e)
+        { 
+             var webbrowser = (WebBrowser)sender;
+            e.Cancel = true;
+            OpenWebsite(webbrowser.StatusText.ToString());
+            webbrowser = null;
+        }
+        public static void OpenWebsite(string url)
         {
-
-            MessageBox.Show("Captured URL :" + e.Url.ToString());
+            System.Diagnostics.Process.Start(url);
         }
 
         //Change lang in conf
@@ -560,17 +723,6 @@ namespace AionLauncher
                     gameSection.Set("Language", lstLang.SelectedItem);
                     launcher.Save();
                   }
-        }
-        //useless
-        private void pctLogo_Click(object sender, EventArgs e){}
-        private void news_panel_Paint(object sender, PaintEventArgs e){}
-        private void labelLang_Click(object sender, EventArgs e){}
-        private void label1_Click(object sender, EventArgs e){}
-        private void progressBar1_Click(object sender, EventArgs e){}
-        private void lblNews_Click(object sender, EventArgs e){}
-        private void timer6_Tick(object sender, EventArgs e)
-        {
-
         }
     } //end class
 } //end namespace
