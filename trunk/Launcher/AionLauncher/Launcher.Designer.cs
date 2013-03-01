@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 namespace AionLauncher
 {
     partial class Launcher
@@ -55,12 +57,15 @@ namespace AionLauncher
             this.btnExit = new Glass.GlassButton();
             this.appName = new System.Windows.Forms.Label();
             this.lblNews = new System.Windows.Forms.Panel();
-            this.shapeContainer1 = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
+            this.dragMain = new Microsoft.VisualBasic.PowerPacks.ShapeContainer();
             this.grap = new Microsoft.VisualBasic.PowerPacks.RectangleShape();
             this.BannerBrowser = new System.Windows.Forms.WebBrowser();
             this.NewsTimer = new System.Windows.Forms.Timer(this.components);
+            this.CheckVersionLbl = new System.Windows.Forms.LinkLabel();
+            this.Loading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
             // 
             // lblStatusText
@@ -90,7 +95,7 @@ namespace AionLauncher
             // news_panel
             // 
             this.news_panel.BackColor = System.Drawing.Color.Transparent;
-            this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplash;
+            this.news_panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("news_panel.BackgroundImage")));
             this.news_panel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.news_panel.ForeColor = System.Drawing.Color.Transparent;
             this.news_panel.Location = new System.Drawing.Point(12, 60);
@@ -98,12 +103,11 @@ namespace AionLauncher
             this.news_panel.Name = "news_panel";
             this.news_panel.Size = new System.Drawing.Size(590, 242);
             this.news_panel.TabIndex = 4;
-            this.news_panel.Paint += new System.Windows.Forms.PaintEventHandler(this.news_panel_Paint);
             // 
             // pctLogo
             // 
             this.pctLogo.BackColor = System.Drawing.Color.Transparent;
-            this.pctLogo.BackgroundImage = global::AionLauncher.Properties.Resources.logo;
+            this.pctLogo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pctLogo.BackgroundImage")));
             this.pctLogo.Location = new System.Drawing.Point(-8, 6);
             this.pctLogo.Name = "pctLogo";
             this.pctLogo.Size = new System.Drawing.Size(164, 35);
@@ -113,23 +117,23 @@ namespace AionLauncher
             // btnLaunch
             // 
             this.btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
-            this.btnLaunch.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 9.5F);
             this.btnLaunch.ForeColor = System.Drawing.Color.Lavender;
             this.btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnLaunch.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.btnLaunch.Location = new System.Drawing.Point(507, 330);
+            this.btnLaunch.Location = new System.Drawing.Point(507, 325);
             this.btnLaunch.Name = "btnLaunch";
             this.btnLaunch.Size = new System.Drawing.Size(87, 57);
             this.btnLaunch.TabIndex = 6;
-            this.btnLaunch.Text = "       RUN         GAME";
+            this.btnLaunch.Text = "RUN         GAME";
+            this.btnLaunch.UseCompatibleTextRendering = true;
             this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
             // 
             // btnSettings
             // 
             this.btnSettings.BackColor = System.Drawing.Color.Silver;
             this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnSettings.Font = new System.Drawing.Font("Corbel", 8.5F);
-            this.btnSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.btnSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.btnSettings.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(184)))), ((int)(((byte)(184)))));
             this.btnSettings.InnerBorderColor = System.Drawing.Color.Transparent;
             this.btnSettings.Location = new System.Drawing.Point(481, 7);
@@ -163,7 +167,7 @@ namespace AionLauncher
             "ES",
             "FR",
             "JP"});
-            this.lstLang.Location = new System.Drawing.Point(437, 349);
+            this.lstLang.Location = new System.Drawing.Point(437, 344);
             this.lstLang.MaxLength = 2;
             this.lstLang.Name = "lstLang";
             this.lstLang.Size = new System.Drawing.Size(43, 21);
@@ -173,14 +177,14 @@ namespace AionLauncher
             // labelLang
             // 
             this.labelLang.AutoSize = true;
+            this.labelLang.BackColor = System.Drawing.Color.Transparent;
             this.labelLang.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.labelLang.ForeColor = System.Drawing.Color.Black;
-            this.labelLang.Location = new System.Drawing.Point(368, 350);
+            this.labelLang.Location = new System.Drawing.Point(368, 345);
             this.labelLang.Name = "labelLang";
             this.labelLang.Size = new System.Drawing.Size(63, 15);
             this.labelLang.TabIndex = 9;
             this.labelLang.Text = "Language";
-            this.labelLang.Click += new System.EventHandler(this.labelLang_Click);
             // 
             // label1
             // 
@@ -192,7 +196,6 @@ namespace AionLauncher
             this.label1.Size = new System.Drawing.Size(136, 13);
             this.label1.TabIndex = 10;
             this.label1.Text = "You have the latest version";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // progressBar1
             // 
@@ -200,7 +203,6 @@ namespace AionLauncher
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(100, 23);
             this.progressBar1.TabIndex = 11;
-            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
             // 
             // progressBar2
             // 
@@ -265,11 +267,11 @@ namespace AionLauncher
             // btnMin
             // 
             this.btnMin.BackColor = System.Drawing.Color.Silver;
-            this.btnMin.BackgroundImage = global::AionLauncher.Properties.Resources.minimize;
             this.btnMin.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F);
             this.btnMin.ForeColor = System.Drawing.Color.Transparent;
             this.btnMin.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(184)))), ((int)(((byte)(184)))));
+            this.btnMin.Image = global::AionLauncher.Properties.Resources.minimize;
             this.btnMin.InnerBorderColor = System.Drawing.Color.Transparent;
             this.btnMin.Location = new System.Drawing.Point(570, 7);
             this.btnMin.Name = "btnMin";
@@ -283,11 +285,11 @@ namespace AionLauncher
             // btnExit
             // 
             this.btnExit.BackColor = System.Drawing.Color.Silver;
-            this.btnExit.BackgroundImage = global::AionLauncher.Properties.Resources.close;
             this.btnExit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F);
             this.btnExit.ForeColor = System.Drawing.Color.Transparent;
             this.btnExit.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(184)))), ((int)(((byte)(184)))));
+            this.btnExit.Image = global::AionLauncher.Properties.Resources.close;
             this.btnExit.InnerBorderColor = System.Drawing.Color.Transparent;
             this.btnExit.Location = new System.Drawing.Point(592, 7);
             this.btnExit.Name = "btnExit";
@@ -318,16 +320,16 @@ namespace AionLauncher
             this.lblNews.Size = new System.Drawing.Size(0, 0);
             this.lblNews.TabIndex = 0;
             // 
-            // shapeContainer1
+            // dragMain
             // 
-            this.shapeContainer1.Location = new System.Drawing.Point(0, 0);
-            this.shapeContainer1.Margin = new System.Windows.Forms.Padding(0);
-            this.shapeContainer1.Name = "shapeContainer1";
-            this.shapeContainer1.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
+            this.dragMain.Location = new System.Drawing.Point(0, 0);
+            this.dragMain.Margin = new System.Windows.Forms.Padding(0);
+            this.dragMain.Name = "dragMain";
+            this.dragMain.Shapes.AddRange(new Microsoft.VisualBasic.PowerPacks.Shape[] {
             this.grap});
-            this.shapeContainer1.Size = new System.Drawing.Size(620, 409);
-            this.shapeContainer1.TabIndex = 17;
-            this.shapeContainer1.TabStop = false;
+            this.dragMain.Size = new System.Drawing.Size(620, 409);
+            this.dragMain.TabIndex = 17;
+            this.dragMain.TabStop = false;
             // 
             // grap
             // 
@@ -336,10 +338,10 @@ namespace AionLauncher
             this.grap.BorderStyle = System.Drawing.Drawing2D.DashStyle.Custom;
             this.grap.FillColor = System.Drawing.Color.Transparent;
             this.grap.FillGradientColor = System.Drawing.Color.Transparent;
-            this.grap.Location = new System.Drawing.Point(-2, -2);
+            this.grap.Location = new System.Drawing.Point(2, 4);
             this.grap.Name = "grap";
             this.grap.SelectionColor = System.Drawing.Color.Transparent;
-            this.grap.Size = new System.Drawing.Size(624, 62);
+            this.grap.Size = new System.Drawing.Size(616, 318);
             this.grap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drag_MouseDown);
             // 
             // BannerBrowser
@@ -356,13 +358,40 @@ namespace AionLauncher
             this.BannerBrowser.TabStop = false;
             this.BannerBrowser.Visible = false;
             this.BannerBrowser.WebBrowserShortcutsEnabled = false;
-            //future update this.BannerBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.BannerBrowser_DocumentCompleted);
+            this.BannerBrowser.NewWindow += new System.ComponentModel.CancelEventHandler(this.BannerBrowser_NewWindow);
             // 
             // NewsTimer
             // 
             this.NewsTimer.Enabled = true;
             this.NewsTimer.Interval = 2000;
             this.NewsTimer.Tick += new System.EventHandler(this.news_Tick);
+            // 
+            // CheckVersionLbl
+            // 
+            this.CheckVersionLbl.ActiveLinkColor = System.Drawing.Color.Transparent;
+            this.CheckVersionLbl.AutoSize = true;
+            this.CheckVersionLbl.BackColor = System.Drawing.Color.Transparent;
+            this.CheckVersionLbl.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.CheckVersionLbl.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.CheckVersionLbl.Location = new System.Drawing.Point(509, 393);
+            this.CheckVersionLbl.Name = "CheckVersionLbl";
+            this.CheckVersionLbl.Size = new System.Drawing.Size(91, 13);
+            this.CheckVersionLbl.TabIndex = 19;
+            this.CheckVersionLbl.TabStop = true;
+            this.CheckVersionLbl.Text = "Checking updates";
+            this.CheckVersionLbl.VisitedLinkColor = System.Drawing.Color.Black;
+            this.CheckVersionLbl.Click += new System.EventHandler(this.CheckVersionLbl_Click);
+            // 
+            // Loading
+            // 
+            this.Loading.BackColor = System.Drawing.Color.Transparent;
+            this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.Loading.Image = global::AionLauncher.Properties.Resources.loading;
+            this.Loading.Location = new System.Drawing.Point(598, 392);
+            this.Loading.Name = "Loading";
+            this.Loading.Size = new System.Drawing.Size(15, 15);
+            this.Loading.TabIndex = 20;
+            this.Loading.TabStop = false;
             // 
             // Launcher
             // 
@@ -372,6 +401,8 @@ namespace AionLauncher
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(620, 409);
+            this.Controls.Add(this.Loading);
+            this.Controls.Add(this.CheckVersionLbl);
             this.Controls.Add(this.BannerBrowser);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.label3);
@@ -390,7 +421,7 @@ namespace AionLauncher
             this.Controls.Add(this.btnMin);
             this.Controls.Add(this.pctLogo);
             this.Controls.Add(this.news_panel);
-            this.Controls.Add(this.shapeContainer1);
+            this.Controls.Add(this.dragMain);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F);
             this.ForeColor = System.Drawing.Color.Transparent;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -402,6 +433,7 @@ namespace AionLauncher
             this.Load += new System.EventHandler(this.Launcher_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -431,11 +463,13 @@ namespace AionLauncher
         private System.Windows.Forms.Timer timer4;
         private System.Windows.Forms.Timer timer5;
         private System.Windows.Forms.Timer timer1;
-        private Microsoft.VisualBasic.PowerPacks.ShapeContainer shapeContainer1;
+        private Microsoft.VisualBasic.PowerPacks.ShapeContainer dragMain;
         private Microsoft.VisualBasic.PowerPacks.RectangleShape grap;
         private System.Windows.Forms.Panel lblNews;
         private System.Windows.Forms.WebBrowser BannerBrowser;
         private System.Windows.Forms.Timer NewsTimer;
+        private System.Windows.Forms.LinkLabel CheckVersionLbl;
+        private System.Windows.Forms.PictureBox Loading;
     }
 }
 
