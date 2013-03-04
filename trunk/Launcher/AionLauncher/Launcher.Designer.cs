@@ -41,8 +41,6 @@ namespace AionLauncher
             this.btnLaunch = new Glass.GlassButton();
             this.btnSettings = new Glass.GlassButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.lstLang = new System.Windows.Forms.ComboBox();
-            this.labelLang = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
@@ -63,9 +61,11 @@ namespace AionLauncher
             this.NewsTimer = new System.Windows.Forms.Timer(this.components);
             this.CheckVersionLbl = new System.Windows.Forms.LinkLabel();
             this.Loading = new System.Windows.Forms.PictureBox();
+            this.AutoStartTimer = new System.Timers.Timer();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AutoStartTimer)).BeginInit();
             this.SuspendLayout();
             // 
             // lblStatusText
@@ -117,6 +117,7 @@ namespace AionLauncher
             // btnLaunch
             // 
             this.btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
+            this.btnLaunch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLaunch.ForeColor = System.Drawing.Color.Lavender;
             this.btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.btnLaunch.InnerBorderColor = System.Drawing.Color.Transparent;
@@ -124,7 +125,7 @@ namespace AionLauncher
             this.btnLaunch.Name = "btnLaunch";
             this.btnLaunch.Size = new System.Drawing.Size(87, 57);
             this.btnLaunch.TabIndex = 6;
-            this.btnLaunch.Text = "RUN         GAME";
+            this.btnLaunch.Text = "RUN\r\nGAME";
             this.btnLaunch.UseCompatibleTextRendering = true;
             this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
             // 
@@ -157,34 +158,6 @@ namespace AionLauncher
             this.pictureBox1.Size = new System.Drawing.Size(369, 88);
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
-            // 
-            // lstLang
-            // 
-            this.lstLang.FormattingEnabled = true;
-            this.lstLang.Items.AddRange(new object[] {
-            "DE",
-            "EN",
-            "ES",
-            "FR",
-            "JP"});
-            this.lstLang.Location = new System.Drawing.Point(437, 344);
-            this.lstLang.MaxLength = 2;
-            this.lstLang.Name = "lstLang";
-            this.lstLang.Size = new System.Drawing.Size(43, 21);
-            this.lstLang.TabIndex = 8;
-            this.lstLang.Text = "EN";
-            // 
-            // labelLang
-            // 
-            this.labelLang.AutoSize = true;
-            this.labelLang.BackColor = System.Drawing.Color.Transparent;
-            this.labelLang.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.labelLang.ForeColor = System.Drawing.Color.Black;
-            this.labelLang.Location = new System.Drawing.Point(368, 345);
-            this.labelLang.Name = "labelLang";
-            this.labelLang.Size = new System.Drawing.Size(63, 15);
-            this.labelLang.TabIndex = 9;
-            this.labelLang.Text = "Language";
             // 
             // label1
             // 
@@ -346,7 +319,6 @@ namespace AionLauncher
             // 
             // BannerBrowser
             // 
-            this.BannerBrowser.AllowNavigation = false;
             this.BannerBrowser.AllowWebBrowserDrop = false;
             this.BannerBrowser.CausesValidation = false;
             this.BannerBrowser.IsWebBrowserContextMenuEnabled = false;
@@ -393,6 +365,12 @@ namespace AionLauncher
             this.Loading.TabIndex = 20;
             this.Loading.TabStop = false;
             // 
+            // AutoStartTimer
+            // 
+            this.AutoStartTimer.Interval = 5000D;
+            this.AutoStartTimer.SynchronizingObject = this;
+            this.AutoStartTimer.Elapsed += new System.Timers.ElapsedEventHandler(this.AutoStartTimer_Tick);
+            // 
             // Launcher
             // 
             this.AcceptButton = this.btnLaunch;
@@ -400,6 +378,7 @@ namespace AionLauncher
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(620, 409);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.CheckVersionLbl);
@@ -410,8 +389,6 @@ namespace AionLauncher
             this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.labelLang);
-            this.Controls.Add(this.lstLang);
             this.Controls.Add(this.lblStatusText);
             this.Controls.Add(this.btnLaunch);
             this.Controls.Add(this.lblServerStatus);
@@ -422,6 +399,7 @@ namespace AionLauncher
             this.Controls.Add(this.pctLogo);
             this.Controls.Add(this.news_panel);
             this.Controls.Add(this.dragMain);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F);
             this.ForeColor = System.Drawing.Color.Transparent;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -434,6 +412,7 @@ namespace AionLauncher
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AutoStartTimer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -451,8 +430,6 @@ namespace AionLauncher
         private Glass.GlassButton btnExit;
         private System.Windows.Forms.Label appName;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.ComboBox lstLang;
-        private System.Windows.Forms.Label labelLang;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ProgressBar progressBar2;
@@ -470,6 +447,7 @@ namespace AionLauncher
         private System.Windows.Forms.Timer NewsTimer;
         private System.Windows.Forms.LinkLabel CheckVersionLbl;
         private System.Windows.Forms.PictureBox Loading;
+        private System.Timers.Timer AutoStartTimer;
     }
 }
 
