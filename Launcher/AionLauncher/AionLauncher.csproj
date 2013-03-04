@@ -52,10 +52,17 @@
   <PropertyGroup>
     <ApplicationIcon>AionClient.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip">
       <HintPath>lib\Ionic.Zip.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="JacksonSoft.CustomTabControl">
+      <HintPath>lib\JacksonSoft.CustomTabControl.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -129,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AionClient.ico" />
+    <EmbeddedResource Include="lib\JacksonSoft.CustomTabControl.dll" />
     <None Include="Resources\update.png" />
     <None Include="Resources\check.png" />
     <None Include="Resources\loading.gif" />
@@ -153,6 +161,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

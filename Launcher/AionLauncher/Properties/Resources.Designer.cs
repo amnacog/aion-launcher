@@ -91,6 +91,16 @@ namespace AionLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] JacksonSoft_CustomTabControl {
+            get {
+                object obj = ResourceManager.GetObject("JacksonSoft_CustomTabControl", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap loading {
@@ -147,6 +157,16 @@ namespace AionLauncher.Properties {
             get {
                 object obj = ResourceManager.GetObject("panel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] TCCEB {
+            get {
+                object obj = ResourceManager.GetObject("TCCEB", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
