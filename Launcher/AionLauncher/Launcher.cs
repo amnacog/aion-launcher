@@ -103,7 +103,7 @@ namespace AionLauncher
                 var NewIniConf = new NewIniConf();
                 MessageBox.Show("This is the first time you launch the Launcher, Generating config files..", "First Time (step 1)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Thread.Sleep(500);
-                MessageBox.Show("Before using this Launcher you must modificate your config file (launcher.ini)", "First Time (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Before using this Launcher you must modificate the configuration.", "First Time (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnSettings_Click(null, null);
             }
             try
