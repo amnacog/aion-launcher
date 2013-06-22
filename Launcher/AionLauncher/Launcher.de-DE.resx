@@ -117,61 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblStatusText.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="lblStatusText.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt, style=Bold</value>
-  </data>
-  <data name="lblStatusText.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-1, 381</value>
-  </data>
   <data name="lblStatusText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 16</value>
-  </data>
-  <data name="lblStatusText.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;lblStatusText.Name" xml:space="preserve">
-    <value>lblStatusText</value>
-  </data>
-  <data name="&gt;&gt;lblStatusText.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblStatusText.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblStatusText.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="lblServerStatus.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblServerStatus.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9.75pt, style=Bold</value>
-  </data>
-  <data name="lblServerStatus.Location" type="System.Drawing.Point, System.Drawing">
-    <value>101, 381</value>
+    <value>106, 16</value>
   </data>
   <data name="lblServerStatus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 16</value>
-  </data>
-  <data name="lblServerStatus.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblServerStatus.Name" xml:space="preserve">
-    <value>lblServerStatus</value>
-  </data>
-  <data name="&gt;&gt;lblServerStatus.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblServerStatus.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;lblServerStatus.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>97, 16</value>
   </data>
   <data name="news_panel.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2576,31 +2527,6 @@
         dmJPT18mu8YiVVoDtTNdwtTegm1n8C1d1tRqjcBRr1qiBH31/wNeNF2dMRR0fQAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="news_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 60</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="news_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="news_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>590, 242</value>
-  </data>
-  <data name="news_panel.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;news_panel.Name" xml:space="preserve">
-    <value>news_panel</value>
-  </data>
-  <data name="&gt;&gt;news_panel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;news_panel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;news_panel.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
   <data name="pctLogo.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJkAAAAiCAYAAABMUXsMAAAABHNCSVQICAgIfAhkiAAAAAFzUkdCAK7O
@@ -2795,81 +2721,6 @@
         X/v5d/6q9f6z1/o19v8/KvgidAqHDvkAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="pctLogo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-8, 6</value>
-  </data>
-  <data name="pctLogo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 35</value>
-  </data>
-  <data name="pctLogo.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;pctLogo.Name" xml:space="preserve">
-    <value>pctLogo</value>
-  </data>
-  <data name="&gt;&gt;pctLogo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pctLogo.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pctLogo.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="btnLaunch.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 9pt, style=Bold</value>
-  </data>
-  <data name="btnLaunch.Location" type="System.Drawing.Point, System.Drawing">
-    <value>507, 325</value>
-  </data>
-  <data name="btnLaunch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 57</value>
-  </data>
-  <data name="btnLaunch.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;btnLaunch.Name" xml:space="preserve">
-    <value>btnLaunch</value>
-  </data>
-  <data name="&gt;&gt;btnLaunch.Type" xml:space="preserve">
-    <value>Glass.GlassButton, AionLauncher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnLaunch.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnLaunch.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="btnSettings.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="btnSettings.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8pt</value>
-  </data>
-  <data name="btnSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>481, 7</value>
-  </data>
-  <data name="btnSettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 20</value>
-  </data>
-  <data name="btnSettings.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="btnSettings.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopCenter</value>
-  </data>
-  <data name="&gt;&gt;btnSettings.Name" xml:space="preserve">
-    <value>btnSettings</value>
-  </data>
-  <data name="&gt;&gt;btnSettings.Type" xml:space="preserve">
-    <value>Glass.GlassButton, AionLauncher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnSettings.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnSettings.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="pictureBox1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAXEAAABYCAYAAAADU8fuAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1
@@ -2951,386 +2802,23 @@
         yzKTBqSBG6CBqRBvWuL/B/FnBIuwvz4yAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="pictureBox1.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Stretch</value>
-  </data>
-  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-6, 321</value>
-  </data>
-  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>369, 88</value>
-  </data>
-  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
-    <value>pictureBox1</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>174, 383</value>
-  </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>136, 13</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
-  </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>180, 352</value>
-  </data>
-  <data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 23</value>
-  </data>
-  <data name="progressBar1.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Name" xml:space="preserve">
-    <value>progressBar1</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="progressBar2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>35, 352</value>
-  </data>
-  <data name="progressBar2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 23</value>
-  </data>
-  <data name="progressBar2.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;progressBar2.Name" xml:space="preserve">
-    <value>progressBar2</value>
-  </data>
-  <data name="&gt;&gt;progressBar2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;progressBar2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;progressBar2.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>136, 357</value>
+    <value>151, 13</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 13</value>
-  </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="label2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopCenter</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 357</value>
+    <value>38, 13</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 13</value>
-  </data>
-  <data name="label3.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>151, 17</value>
-  </data>
-  <data name="timer2.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>238, 17</value>
-  </data>
-  <data name="timer3.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>325, 17</value>
-  </data>
-  <data name="timer4.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>412, 17</value>
-  </data>
-  <data name="timer5.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>499, 17</value>
-  </data>
-  <data name="btnMin.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="btnMin.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.5pt</value>
-  </data>
-  <data name="btnMin.Location" type="System.Drawing.Point, System.Drawing">
-    <value>570, 7</value>
-  </data>
-  <data name="btnMin.Size" type="System.Drawing.Size, System.Drawing">
-    <value>20, 20</value>
-  </data>
-  <data name="btnMin.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Name" xml:space="preserve">
-    <value>btnMin</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Type" xml:space="preserve">
-    <value>Glass.GlassButton, AionLauncher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnMin.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnMin.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="btnExit.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="btnExit.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.5pt</value>
-  </data>
-  <data name="btnExit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>592, 7</value>
-  </data>
-  <data name="btnExit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>20, 20</value>
-  </data>
-  <data name="btnExit.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;btnExit.Name" xml:space="preserve">
-    <value>btnExit</value>
-  </data>
-  <data name="&gt;&gt;btnExit.Type" xml:space="preserve">
-    <value>Glass.GlassButton, AionLauncher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;btnExit.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;btnExit.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="appName.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="appName.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt, style=Bold</value>
-  </data>
-  <data name="appName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>135, 16</value>
+    <value>29, 13</value>
   </data>
   <data name="appName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 17</value>
-  </data>
-  <data name="appName.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;appName.Name" xml:space="preserve">
-    <value>appName</value>
-  </data>
-  <data name="&gt;&gt;appName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;appName.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;appName.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="lblNews.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lblNews.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="lblNews.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;lblNews.Name" xml:space="preserve">
-    <value>lblNews</value>
-  </data>
-  <data name="&gt;&gt;lblNews.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="dragMain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="dragMain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 0</value>
-  </data>
-  <data name="grap.BorderColor" type="System.Drawing.Color, System.Drawing">
-    <value>Transparent</value>
-  </data>
-  <data name="grap.BorderStyle" type="System.Drawing.Drawing2D.DashStyle, System.Drawing">
-    <value>Custom</value>
-  </data>
-  <data name="grap.FillColor" type="System.Drawing.Color, System.Drawing">
-    <value>Transparent</value>
-  </data>
-  <data name="grap.FillGradientColor" type="System.Drawing.Color, System.Drawing">
-    <value>Transparent</value>
-  </data>
-  <data name="grap.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 4</value>
-  </data>
-  <data name="grap.SelectionColor" type="System.Drawing.Color, System.Drawing">
-    <value>Transparent</value>
-  </data>
-  <data name="grap.Size" type="System.Drawing.Size, System.Drawing">
-    <value>616, 318</value>
-  </data>
-  <data name="dragMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>620, 409</value>
-  </data>
-  <data name="dragMain.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;dragMain.Name" xml:space="preserve">
-    <value>dragMain</value>
-  </data>
-  <data name="&gt;&gt;dragMain.Type" xml:space="preserve">
-    <value>Microsoft.VisualBasic.PowerPacks.ShapeContainer, Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="&gt;&gt;dragMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;dragMain.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="BannerBrowser.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 61</value>
-  </data>
-  <data name="BannerBrowser.Size" type="System.Drawing.Size, System.Drawing">
-    <value>588, 240</value>
-  </data>
-  <data name="BannerBrowser.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="BannerBrowser.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;BannerBrowser.Name" xml:space="preserve">
-    <value>BannerBrowser</value>
-  </data>
-  <data name="&gt;&gt;BannerBrowser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.WebBrowser, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;BannerBrowser.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;BannerBrowser.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="NewsTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>17, 56</value>
-  </data>
-  <data name="CheckVersionLbl.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+    <value>109, 17</value>
   </data>
   <data name="CheckVersionLbl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>509, 393</value>
+    <value>501, 393</value>
   </data>
   <data name="CheckVersionLbl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 13</value>
-  </data>
-  <data name="CheckVersionLbl.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="&gt;&gt;CheckVersionLbl.Name" xml:space="preserve">
-    <value>CheckVersionLbl</value>
-  </data>
-  <data name="&gt;&gt;CheckVersionLbl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;CheckVersionLbl.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;CheckVersionLbl.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="Loading.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="Loading.Location" type="System.Drawing.Point, System.Drawing">
-    <value>598, 392</value>
-  </data>
-  <data name="Loading.Size" type="System.Drawing.Size, System.Drawing">
-    <value>15, 15</value>
-  </data>
-  <data name="Loading.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;Loading.Name" xml:space="preserve">
-    <value>Loading</value>
-  </data>
-  <data name="&gt;&gt;Loading.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;Loading.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;Loading.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="AutoStartTimer.TrayLocation" type="System.Drawing.Point, System.Drawing">
-    <value>17, 17</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>96, 13</value>
   </data>
   <data name="$this.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -20994,15 +20482,6 @@
         WKgEkDHxwACR6muc7A9GRSwRh8T2Ow5QQFXirrSiOoV6jJ0DgEq2eMj5fJcpwr7xj4ke67Z36/I//9k=
 </value>
   </data>
-  <data name="$this.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>620, 409</value>
-  </data>
-  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 7.5pt</value>
-  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAQAEBAAAAAAIABoBAAARgAAACAgAAAAACAAqBAAAK4EAAAwMAAAAAAgAKglAABWFQAAQEAAAAAA
@@ -21541,111 +21020,51 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
 </value>
   </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Aion Launcher</value>
-  </data>
-  <data name="&gt;&gt;timer1.Name" xml:space="preserve">
-    <value>timer1</value>
-  </data>
-  <data name="&gt;&gt;timer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;timer2.Name" xml:space="preserve">
-    <value>timer2</value>
-  </data>
-  <data name="&gt;&gt;timer2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;timer3.Name" xml:space="preserve">
-    <value>timer3</value>
-  </data>
-  <data name="&gt;&gt;timer3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;timer4.Name" xml:space="preserve">
-    <value>timer4</value>
-  </data>
-  <data name="&gt;&gt;timer4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;timer5.Name" xml:space="preserve">
-    <value>timer5</value>
-  </data>
-  <data name="&gt;&gt;timer5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;grap.Name" xml:space="preserve">
-    <value>grap</value>
-  </data>
-  <data name="&gt;&gt;grap.Type" xml:space="preserve">
-    <value>Microsoft.VisualBasic.PowerPacks.RectangleShape, Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="&gt;&gt;NewsTimer.Name" xml:space="preserve">
-    <value>NewsTimer</value>
-  </data>
-  <data name="&gt;&gt;NewsTimer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AutoStartTimer.Name" xml:space="preserve">
-    <value>AutoStartTimer</value>
-  </data>
-  <data name="&gt;&gt;AutoStartTimer.Type" xml:space="preserve">
-    <value>System.Timers.Timer, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>Launcher</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="appName.Text" xml:space="preserve">
-    <value>Game Launch</value>
+    <value>Game-Launch</value>
   </data>
   <data name="btnLaunch.Text" xml:space="preserve">
-    <value>RUN
-GAME
+    <value>SPIEL
+STARTEN
 </value>
   </data>
   <data name="btnLaunch.Text.up" xml:space="preserve">
     <value>UPDATE</value>
   </data>
   <data name="btnLaunchTimeout" xml:space="preserve">
-    <value>RUN
-GAME
+    <value>SPIEL
+STARTEN
 0</value>
   </data>
   <data name="btnSettings.Text" xml:space="preserve">
-    <value>Settings</value>
+    <value>Einstellungen</value>
   </data>
   <data name="CheckVersionLbl.Text" xml:space="preserve">
-    <value>Checking updates</value>
+    <value>Überprüfen Update</value>
   </data>
   <data name="CheckVersionNewlbl" xml:space="preserve">
-    <value>Update available</value>
+    <value>Neue Version verfügbar</value>
   </data>
   <data name="CheckVrersionErrorlbl" xml:space="preserve">
-    <value>Error</value>
+    <value>Fehler</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>You have the latest version</value>
+    <value>Sie haben die neueste Version</value>
   </data>
   <data name="label1.Text.latest" xml:space="preserve">
-    <value>You have the latest version</value>
+    <value>Neueste</value>
   </data>
   <data name="label1.Text.ready" xml:space="preserve">
-    <value>Ready to update...</value>
+    <value>Aktualisiert bereit...</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
-    <value>Current:</value>
+    <value>Aktuell:</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
     <value>Total:</value>
   </data>
   <data name="lblServerStatus.Text" xml:space="preserve">
-    <value>Pinging...</value>
+    <value>Überprüfen...</value>
   </data>
   <data name="lblServerStatusOff" xml:space="preserve">
     <value>Offline</value>
@@ -21654,48 +21073,48 @@ GAME
     <value>Online</value>
   </data>
   <data name="lblStatusText.Text" xml:space="preserve">
-    <value>Server Status:</value>
+    <value>Server-Status:</value>
   </data>
   <data name="MsgCheckVrsNew" xml:space="preserve">
-    <value>A new version of the launcher is available</value>
+    <value>Eine neue Version des Launchers ist verfügbar</value>
   </data>
   <data name="MsgCheckVrsNew1" xml:space="preserve">
-    <value>Update available: </value>
+    <value>Update verfügbar: </value>
   </data>
   <data name="MsgErrorAion.bin" xml:space="preserve">
-    <value>This program must be run under aion folder</value>
+    <value>Dieses Programm muss unter aion Ordner ausgeführt werden</value>
   </data>
   <data name="MsgErrorAion.bin1" xml:space="preserve">
-    <value>Aion.bin not found!</value>
+    <value>Aion.bin wurde nicht gefunden!</value>
   </data>
   <data name="MsgErrorLaunch.Text.up" xml:space="preserve">
-    <value>An unknown error occurred while attempting to run aion.bin: </value>
+    <value>Ein unbekannter Fehler ist aufgetreten beim Versuch, aion.bin laufen: </value>
   </data>
   <data name="MsgInvalidHost" xml:space="preserve">
-    <value>Please make sure your HOST is set in Version.ini</value>
+    <value>Bitte stellen Sie sicher, dass Ihr HOST</value>
   </data>
   <data name="MsgInvalidHost1" xml:space="preserve">
-    <value>Error: invalid HOST</value>
+    <value>Fehler: ungültige HOST</value>
   </data>
   <data name="MsgLaunchError" xml:space="preserve">
-    <value>Invalid Launcher.ini..</value>
+    <value>Ungültige Launcher.ini..</value>
   </data>
   <data name="MsgLaunchError1" xml:space="preserve">
-    <value>Error: invalid launcher.ini</value>
+    <value>Fehler: ungültige launcher.ini</value>
   </data>
   <data name="MsgVersionClient" xml:space="preserve">
-    <value>Your Client is Outaded or too recent. We will update it for you.</value>
+    <value>Ihr Auftraggeber ist Outaded oder zu neu. Wir werden es für Sie aktualisieren.</value>
   </data>
   <data name="MsgVersionCreate" xml:space="preserve">
-    <value>Error while trying to access version.ini.. Create it for you.</value>
+    <value>Fehler beim version.ini zugreifen .. Neues für Sie.</value>
   </data>
   <data name="MsgVersionCreate1" xml:space="preserve">
-    <value>Error: Accessing version.ini</value>
+    <value>Fehler: Zugriff version.ini</value>
   </data>
   <data name="MsgVersionError" xml:space="preserve">
-    <value>Invalid version.ini</value>
+    <value>Ungültige version.ini</value>
   </data>
   <data name="MsgVersionError1" xml:space="preserve">
-    <value>Error: invalid version.ini</value>
+    <value>Fehler: ungültige version.ini</value>
   </data>
 </root>

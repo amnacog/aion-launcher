@@ -159,7 +159,11 @@ namespace AionLauncher
                     string ChBanner = newsUrl.Text;
                     Launcher.ChangeBanner = ChBanner;
                 }
-
+                string CurrentLaunchLANG = miscSection.Get("LaunchLanguage");
+                if(LaunchLANG != CurrentLaunchLANG ){
+                    MessageBox.Show("The launcher will restart to apply the new language", "Restart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Application.Restart();
+                }
                 connectionSection.Set("IP", HOST);
                 connectionSection.Set("LoginPort", PORT);
                 gameSection.Set("Options", OPTIONS);
@@ -286,6 +290,11 @@ namespace AionLauncher
         private void newsUrl_TextChanged(object sender, EventArgs e)
         {
             Settings.BannerCode = 1;
+        }
+
+        private void Drag_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

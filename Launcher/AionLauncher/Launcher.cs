@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
+using System.Threading;
 using System.Drawing;
 using System.Text;
+using System.Resources;
 using System.Drawing.Text;
 using System.Windows.Forms;
-using System.Threading;
 using System.Net.Sockets;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -38,15 +40,15 @@ namespace AionLauncher
                     return Assembly.Load(assemblyData);
                 }
             };
-
-            //Init Controls
-            InitializeComponent();
-
+            //Load Languages
+            LoadLang();
+            
             //Load Fonts
             LoadFont();
             btnLaunch.Font = new Font(private_fonts.Families[0], 9.5F);
             btnLaunch.UseCompatibleTextRendering = true;
         
+
         } //end constructor
 
         //corner
@@ -54,13 +56,12 @@ namespace AionLauncher
 		public const int HT_CAPTION = 0x2;
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
-		//drag zone
+		
+        //drag zone
         [DllImportAttribute ("user32.dll")]
 		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-		
 		[DllImportAttribute ("user32.dll")]
 		public static extern bool ReleaseCapture();
-
         [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
         public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
         string lpFileName);
@@ -68,17 +69,30 @@ namespace AionLauncher
         public static bool ForceCheck { get; set; }
         public static int BannerCode { get; set; }
         public static string ChangeBanner { get; set; }
+        public string lang { get; set; }
+        public CultureInfo ci { get; set; }
+        public ResourceManager resman = new ResourceManager("AionLauncher.Launcher", Assembly.GetExecutingAssembly());
 
-		//call functions to move the form
-        private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        //call lang
+        void LoadLang()
         {
-            if (e.Button == MouseButtons.Left)
+            string cl = lang;
+            if (System.IO.File.Exists("launcher.ini"))
             {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                IConfigSource getlang = new IniConfigSource("launcher.ini");
+                lang = getlang.Configs["Misc"].Get("LaunchLanguage");
+                lang = lang.Replace("fr", "fr-FR");
+                lang = lang.Replace("de", "de-DE");
+                lang = lang.Replace("en", "en-US");
             }
+            if (lang == null){lang = "en-US";}
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(lang);
+            this.ci = new CultureInfo(lang);
+            //load controllers
+            this.InitializeComponent();
         }
-        
+
         //Create NewPrivate Font
         PrivateFontCollection private_fonts = new PrivateFontCollection();
         private void LoadFont()
@@ -93,10 +107,8 @@ namespace AionLauncher
             fontStream.Close();
             Marshal.FreeCoTaskMem(data);
         }
-
         private void Launcher_Load(object sender, EventArgs e)
         {
-
             //Test launcher.ini (if all filled and set lang selectbox)
             if (!System.IO.File.Exists("launcher.ini"))
             {
@@ -106,6 +118,7 @@ namespace AionLauncher
                 MessageBox.Show("Before using this Launcher you must modificate the configuration.", "First Time (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnSettings_Click(null, null);
             }
+
             try
             {
             //new instance of nini
@@ -122,6 +135,7 @@ namespace AionLauncher
             string PATCH = patchSection.Get("Bin");
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
             bool AUTOL = miscSection.GetBoolean("AutoStart");
+            string LAUNLANG = miscSection.Get("LaunchLanguage");
 
             //set the lang selectbox
             LANG = LANG.Replace("fr", "FR");
@@ -129,18 +143,20 @@ namespace AionLauncher
             LANG = LANG.Replace("en", "EN");
             LANG = LANG.Replace("es", "ES");
             LANG = LANG.Replace("ru", "RU");
+
             }
             catch (Exception)
             {
-                MessageBox.Show("Invalid launcher.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(resman.GetString("MsgLaunchError",ci), resman.GetString("MsgLaunchError1",ci), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
             if (!System.IO.File.Exists("version.ini"))
             {
                 var NewIni = new NewIni();
-                MessageBox.Show("Error While trying to access version.ini.. Create it for you", "Error Accessing version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(resman.GetString("MsgVersionCreate", ci), resman.GetString("MsgVersionCreate1,ci"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
             try
             {
                     this.Opacity = 0f;
@@ -151,22 +167,21 @@ namespace AionLauncher
                 if (current != "3.0.0.8" | ForceCheck == true)
                 {
                     //Notify the user
-                    MessageBox.Show("Your Client is Outaded or too recent. We will update it for you.");
+                    MessageBox.Show(resman.GetString("MsgVersionClient", ci), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     //Update
                     btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
                     btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                    label1.Text = "Ready to update...";
-                    btnLaunch.Text = "UPDATE";
-                }
-                else
-                {
+                    label1.Text = resman.GetString("label1.Text.ready", ci);
+                    btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
+                    } else {
                         this.Opacity = 0f;
                         Application.DoEvents();
 
                     // Update Progress Bars etc.
                     progressBar1.Value = 100;
                     progressBar2.Value = 100;
-                    label1.Text = "You Have the latest version";
+                    label1.Text = resman.GetString("label1.Text.latest", ci);
 
                     Thread AutoStartThread = new Thread(new ThreadStart(this.AutoStart));
                     AutoStartThread.Start();
@@ -174,7 +189,7 @@ namespace AionLauncher
             }
             catch (Exception)
             {
-                MessageBox.Show("Invalid version.ini..", "Error: invalid version.ini", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(resman.GetString("MsgVersionError", ci), resman.GetString("MsgVersionError1", ci), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Application.Exit();
             }
 
@@ -191,29 +206,26 @@ namespace AionLauncher
             CheckVersionThread.Start();
 
         } //end Launcher_Load
-
         private void AutoStart()
-        {
-            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+        {            IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig miscSection = launcher.Configs["Misc"];
             bool AUTOL = miscSection.GetBoolean("AutoStart");
             if (AUTOL == true)
             {
                 AutoStartTimer.Start();
                 int number = 5;
-                while (btnLaunch.Text != "RUN\r\nGAME\r\n0")
+                while (btnLaunch.Text != resman.GetString("btnLaunchTimeout", ci))
                 {
                     if (AutoStartTimer.Enabled == false) { break; }
-                    SetControlPropertyThreadSafe(btnLaunch, "Text", "RUN\r\nGAME\r\n" + number--);
+                    SetControlPropertyThreadSafe(btnLaunch, "Text", resman.GetString("btnLaunch.Text", ci) + number--);
                     Thread.Sleep(1000);
                 }
-                if (btnLaunch.Text == "RUN\r\nGAME\r\n0")
+                if (btnLaunch.Text == resman.GetString("btnLaunchTimeout", ci))
                 {
-                    SetControlPropertyThreadSafe(btnLaunch, "Text", "RUN\r\nGAME");
+                    SetControlPropertyThreadSafe(btnLaunch, "Text", resman.GetString("btnLaunch.Text", ci));
                 }
             }
         }
-
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
@@ -232,14 +244,14 @@ namespace AionLauncher
                     {
                         if ((HOST == string.Empty || HOST == null))
                         {
-                            MessageBox.Show("Please make sure your HOST is set in Version.ini", "Invalid HOST", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(resman.GetString("MsgInvalidHost", ci), resman.GetString("MsgInvalidHost1", ci), MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
                         } //end if
 
                         socket.Connect(HOST, PORT);
                         socket.Close();
 
-                        SetControlPropertyThreadSafe(lblServerStatus, "Text", "Online");
+                        SetControlPropertyThreadSafe(lblServerStatus, "Text", resman.GetString("lblServerStatusOn", ci));
                         SetControlPropertyThreadSafe(lblServerStatus, "ForeColor", Color.Green);
 
                     }
@@ -247,7 +259,7 @@ namespace AionLauncher
                     {
                         if (ex.SocketErrorCode == SocketError.ConnectionRefused)
                         {
-                            SetControlPropertyThreadSafe(lblServerStatus, "Text", "Offline");
+                            SetControlPropertyThreadSafe(lblServerStatus, "Text", resman.GetString("lblServerStatusOff", ci));
                             SetControlPropertyThreadSafe(lblServerStatus, "ForeColor", Color.Red);
                         } //end if
                     } //end try/catch
@@ -255,8 +267,7 @@ namespace AionLauncher
                 //only check every 5 seconds while the program is up.
                 Thread.Sleep(5000);
             } //end while
-        } //end CheckServerStatus
-
+        }
         //this is a delegate used to access the UI from another thread
         private delegate void SetControlPropertyThreadSafeDelegate(Control control, string propertyName, object propertyValue);
         public static void SetControlPropertyThreadSafe(Control control, string propertyName, object propertyValue)
@@ -271,7 +282,6 @@ namespace AionLauncher
             }
 
         }//end SetControlPropertyThreadSafe
-
         private void LaunchGame()
         {
             //Begin new instance nini
@@ -287,7 +297,7 @@ namespace AionLauncher
             string LANG = PlaySection.Get("Language");
             int CC = PlaySection.GetInt("CountryCode");
 
-            if (btnLaunch.Text == "UPDATE")
+            if (btnLaunch.Text == resman.GetString("btnLaunch.Text.up", ci))
             {
                 timer1.Start();
                 btnLaunch.UseWaitCursor = true;
@@ -320,19 +330,17 @@ namespace AionLauncher
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("An unknown error occurred while attempting to run aion.bin: " + ex.Message);
+                        MessageBox.Show(resman.GetString("MsgErrorLaunch.Text.up", ci) + ex.Message);
                     } //end try/catch
                 }
                 else
                 {
-                    MessageBox.Show("This program must be run under the Aion folder.", "aion.bin not found!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(resman.GetString("MsgErrorAion.bin", ci), resman.GetString("MsgErrorAion.bin1", ci), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 //end if
             } //end btnLaunch_Click
         }
-
         //Events
-
         //news
         private void news_Tick(object sender, EventArgs e)
         {
@@ -382,8 +390,8 @@ namespace AionLauncher
                 //Update
                 btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
                 btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                label1.Text = "Ready to update...";
-                btnLaunch.Text = "UPDATE";
+                label1.Text = resman.GetString("label1.Text.ready", ci);
+                btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
             }
         }
         private class NewIni
@@ -433,7 +441,7 @@ namespace AionLauncher
                 + ";This file has been generated by the launcher, for any problem please report to the about section" + NL
                 + "[Connection]" + NL
                 + ";Your login ip/dns server (can be game server ip/dns too)" + NL
-                + "IP = vzoneserver.dyndns.org" + NL
+                + "IP = xxx.xxx.xxx.xxx" + NL
                 + ";Your login port server (2106 by default)" + NL
                 + "LoginPort = 2106" + NL
                 + "" + NL
@@ -451,7 +459,7 @@ namespace AionLauncher
                 + "" + NL
                 + "[Misc]" + NL
                 + ";(url) Place here the webpage for the banner" + NL
-                + "BannerUrl = http://cmsstatic.aionfreetoplay.com/launcher_en.html" + NL
+                + "BannerUrl = http://cmsstatic.aionfreetoplay.com/launcher-pts_en.html" + NL
                 + "; (bool)Game Start" + NL
                 + "AutoStart = false" + NL
                 + "; (2string)" + NL
@@ -630,7 +638,7 @@ namespace AionLauncher
             btnLaunch.Enabled = true;
             btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
             btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
-            btnLaunch.Text = "RUN\r\nGAME";
+            btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
             btnLaunch.UseWaitCursor = false;
 
             // Pause Timer
@@ -644,7 +652,8 @@ namespace AionLauncher
             AutoStartTimer.Stop();
             LaunchGame();
         }
-        //get uodate version
+
+        //get informations
         public class JsonHelper
         {
             public static T JsonDeserialize<T>(string jsonString)
@@ -655,39 +664,61 @@ namespace AionLauncher
                 return obj;
             }
         }
-        public class JsonParser{public string version { get; set; }}
-
+        public class JsonParser
+        {
+            public string version { get; set; }
+            public string changelog { get; set; }
+            public string gameclient { get; set; }
+            public string download { get; set; }
+        }
         //CheckVersion (Please do not modify these lines)
         private void CheckVersions()
         {
             if (Environment.OSVersion.Version >= new Version(6, 0))
             {
-                WebClient getJson = new WebClient();
-                string json = getJson.DownloadString("http://aion-launcher-beta.googlecode.com/svn/trunk/Launcher/Parser/index.php");
-                JsonParser LauncherJson = JsonHelper.JsonDeserialize<JsonParser>(json);
-
-                string currentVersion = Application.ProductVersion;
-                string getVersion = LauncherJson.version;
-
-
-                if (currentVersion != getVersion)
+                try
                 {
+                    WebClient getJson = new WebClient();
+                    string json = getJson.DownloadString("http://aion-launcher-beta.googlecode.com/svn/trunk/Launcher/Parser/index.php");
+                    JsonParser LauncherJson = JsonHelper.JsonDeserialize<JsonParser>(json);
 
-                    this.Loading.Image = global::AionLauncher.Properties.Resources.update;
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(514, 393));
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Text", "Update available");
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkColor", System.Drawing.SystemColors.MenuHighlight);
-                    MessageBox.Show("A new version of the launcher is available", "New Version " + getVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string currentVersion = Application.ProductVersion;
+                    string getVersion = LauncherJson.version;
+                    string getDownload = LauncherJson.download;
+                    string getgameclient = LauncherJson.gameclient;
+                    string getChangelog = LauncherJson.changelog;
 
+
+                    if (currentVersion != getVersion)
+                    {
+
+                        this.Loading.Image = global::AionLauncher.Properties.Resources.update;
+                        if (lang == "fr-FR")
+                        {SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(460, 393));}
+                        else if (lang == "de-DE") { SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(480, 393)); }
+                        else { SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(510, 393)); }
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Text", resman.GetString("CheckVersionNewlbl", ci));
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkColor", System.Drawing.SystemColors.MenuHighlight);
+                        MessageBox.Show(resman.GetString("MsgCheckVrsNew", ci) + "\r\n\r\n" + getChangelog, resman.GetString("MsgCheckVrsNew1", ci) + getVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    }
+                    else
+                    {
+                        this.Loading.Image = global::AionLauncher.Properties.Resources.check;
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(575, 393));
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Size", new System.Drawing.Size(40, 13));
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Text", currentVersion);
+
+                    }
                 }
-                else
+                catch(Exception)
                 {
-                    this.Loading.Image = global::AionLauncher.Properties.Resources.check;
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(560, 393));
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Size", new System.Drawing.Size(40, 13));
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Text", currentVersion);
-
+                    this.Loading.Image = null;
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(535, 393));
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Text", resman.GetString("CheckVrersionErrorlbl", ci));
+                    this.CheckVersionLbl.LinkColor = System.Drawing.Color.Red;
                 }
             }
             else
@@ -700,15 +731,29 @@ namespace AionLauncher
             }
         }
 
+
+        //call events
+        private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
         private void btnLaunch_Click(object sender, EventArgs e)
         {
           LaunchGame();
         }
         private void CheckVersionLbl_Click(object sender, EventArgs e)
         {
-            if (CheckVersionLbl.Text == "Update available")
+            WebClient getJson = new WebClient();
+            string json = getJson.DownloadString("http://aion-launcher-beta.googlecode.com/svn/trunk/Launcher/Parser/index.php");
+            JsonParser LauncherJson = JsonHelper.JsonDeserialize<JsonParser>(json);
+
+            if (CheckVersionLbl.Text == resman.GetString("CheckVersionNewlbl", ci))
             {
-                System.Diagnostics.Process.Start("https://code.google.com/p/aion-launcher-beta/");
+                System.Diagnostics.Process.Start(LauncherJson.download);
             }
             if (CheckVersionLbl.Text == "Incompatible")
             {
@@ -720,7 +765,7 @@ namespace AionLauncher
             if (AutoStartTimer.Enabled == true)
             {
                 AutoStartTimer.Stop();
-                btnLaunch.Text = "RUN\r\nGAME";
+                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
             }
             var SettingsWindow = new Settings();
             SettingsWindow.ShowDialog(this);
@@ -730,10 +775,10 @@ namespace AionLauncher
         private void btnExit_Click(object sender, EventArgs e)
         {
             while(this.Opacity != 0)
-        {
-        this.Opacity -= 0.05;
-        Thread.Sleep(10);
-        }
+            {
+            this.Opacity -= 0.05;
+            Thread.Sleep(10);
+            }
             Application.Exit();
         }
         private void btnMin_Click(object sender, EventArgs e)
