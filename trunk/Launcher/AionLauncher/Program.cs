@@ -4,13 +4,13 @@ using System.Windows.Forms;
 
 namespace AionLauncher
 {
-    static class Program
+     class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+       static void Main()
         {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
