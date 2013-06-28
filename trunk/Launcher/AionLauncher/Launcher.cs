@@ -300,9 +300,9 @@ namespace AionLauncher
             if (btnLaunch.Text == resman.GetString("btnLaunch.Text.up", ci))
             {
                 timer1.Start();
-                btnLaunch.UseWaitCursor = true;
-                btnLaunch.Enabled = false;
+                btnLaunch.Text = resman.GetString("btnLaunch.Text.ccl", ci);
             }
+            else if (btnLaunch.Text == resman.GetString("btnLaunch.Text.ccl", ci)){cclupdate();}
             else
             {
                 //first, check to see if aion.bin can be found
@@ -350,18 +350,24 @@ namespace AionLauncher
 
             //Get string
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
-
-            if (NEWSFEEDURL == null || NEWSFEEDURL == "")
+            try
             {
-                    string news = "";
-                    this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
-                    this.lblNews.Text = news;
+                HttpWebRequest request = WebRequest.Create(NEWSFEEDURL) as HttpWebRequest;
+                request.Method = "HEAD";
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-            }else{
-                this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
-                this.BannerBrowser.Visible = true;
+                if (response.StatusCode == HttpStatusCode.OK)
+                    this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
+                    this.BannerBrowser.Visible = true; 
             }
-          NewsTimer.Stop();
+            catch
+            {
+                string news = "";
+                this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
+                this.lblNews.Text = news;
+                this.BannerBrowser.Visible = false; 
+            }
+            NewsTimer.Stop();
         }
         //Refresh Banner if changed
         private void ChangedBanner()
@@ -371,16 +377,18 @@ namespace AionLauncher
             if (BannerCode == 200)
             {
                 this.BannerBrowser.Navigate(NEWSFEEDURL);
+                this.BannerBrowser.Visible = true;
+                this.BannerBrowser.Refresh();
             }
-            else if (BannerCode == 0)
-            {
+            else if (BannerCode == 0) {
 
             }
-            else if(BannerCode != 200)
+            else
             {
                 string news = "";
                 this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
                 this.lblNews.Text = news;
+                this.BannerBrowser.Visible = false;
             }
         }
         private void Fcheck()
@@ -392,6 +400,14 @@ namespace AionLauncher
                 btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
                 label1.Text = resman.GetString("label1.Text.ready", ci);
                 btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
+            }
+            else
+            {   
+                //normal state
+                btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
+                btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
+                label1.Text = resman.GetString("label1.Text", ci);
+                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
             }
         }
         private class NewIni
@@ -502,6 +518,30 @@ namespace AionLauncher
             System.Diagnostics.Process.Start(url);
         }
 
+        private void cclupdate(){
+            if (btnLaunch.Text == resman.GetString("btnLaunch.Text.ccl", ci))
+            {
+                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
+                btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
+                btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
+                label1.Text = "Update Canceled..";
+                Launcher.ForceCheck = false;
+                if (System.IO.File.Exists("bin32.zip"))
+                {
+                    File.Delete("bin32.zip");
+                }
+                
+            }
+            timer1.Stop();
+            timer2.Stop();
+            timer3.Stop();
+            timer4.Stop();
+            timer5.Stop();
+            progressBar1.Value = 0;
+            progressBar2.Value = 0;
+            label1.Text = "Ready to update..";
+        }
+
         //Proceed to update
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -522,7 +562,8 @@ namespace AionLauncher
                 HttpWebRequest request = WebRequest.Create(URL) as HttpWebRequest;
                 request.Method = "HEAD";
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                if (response.StatusCode == HttpStatusCode.OK | response.StatusCode == HttpStatusCode.Accepted | response.StatusCode == HttpStatusCode.Forbidden | response.StatusCode == HttpStatusCode.NoContent | response.StatusCode == HttpStatusCode.NotFound)
+                HttpStatusCode status = response.StatusCode;
+                if (status == HttpStatusCode.OK | status == HttpStatusCode.Accepted)
                 {
                     label1.Text = "Connection OK";
                     // Progress bar update
@@ -533,18 +574,45 @@ namespace AionLauncher
                     timer2.Start();
                     // Timer 2 for updates
                 }
+                else
+                {
+                    label1.Text = "Connection Error";
+                    timer1.Stop();
+                    MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    label1.Text = "Ready to Update..";
+                    cclupdate();
+                }
             }
-            catch
+            catch(WebException wc)
             {
-                label1.Text = "Connection Error";
-                timer1.Stop();
-                MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                label1.Text = "Ready to Update..";
-                btnLaunch.Enabled = true;
-                btnLaunch.UseWaitCursor = false;
+                using (WebResponse response = wc.Response)
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)response;
+                    if (httpResponse.StatusCode != HttpStatusCode.Forbidden)
+                    {
+                        label1.Text = "Connection Error";
+                        timer1.Stop();
+                        MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        label1.Text = "Ready to Update..";
+                        cclupdate();
+                    }
+                    else
+                    {
+                        label1.Text = "Connection OK";
+                        // Progress bar update
+                        progressBar1.Value = 100;
+                        progressBar2.Value = 25;
+                        // Pause Timer
+                        timer1.Stop();
+                        timer2.Start();
+                        // Timer 2 for updates
+                    }
+                }
+                
             }
 
         }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             // New
@@ -566,7 +634,7 @@ namespace AionLauncher
         private void timer3_Tick(object sender, EventArgs e)
         {
             // Label change
-            label1.Text = "Deleting Old Files...";
+            label1.Text = "Deleting Old Package...";
 
             // Download update
             if (System.IO.File.Exists(System.Environment.CurrentDirectory + "/" + "bin32.zip") == true)
@@ -594,17 +662,34 @@ namespace AionLauncher
             label1.Text = "Downloading bin32.zip...";
 
             // Download Files
-            WebClient webClient = new WebClient();
-            webClient.DownloadFile(PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
+            try
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    //Catch Or download
+                    webClient.DownloadFile(PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
+                }
+                // Progress bar update
+                progressBar1.Value = 0;
+                progressBar1.Value = 100;
+                progressBar2.Value = 85;
 
-            // Progress bar update
-            progressBar1.Value = 0;
-            progressBar1.Value = 100;
-            progressBar2.Value = 85;
-
-            // Pause Timer
-            timer4.Stop();
-            timer5.Start();
+                // Pause Timer
+                timer4.Stop();
+                timer5.Start();
+            }
+            catch (WebException ea)
+            {
+                    var response = ea.Response as HttpWebResponse;
+                    label1.Text = "Connection Error";
+                    timer4.Stop();
+                    if (ea.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        MessageBox.Show("Unable to download the file (" + (int)response.StatusCode +" "+ ((HttpWebResponse)ea.Response).StatusDescription + ")", "Connection Error: (" + (int)response.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    label1.Text = "Ready to Update..";
+                    cclupdate();
+            }
 
         }
         private void timer5_Tick(object sender, EventArgs e)
@@ -635,11 +720,10 @@ namespace AionLauncher
             progressBar2.Value = 100;
 
             label1.Text = "Update Complete...";
-            btnLaunch.Enabled = true;
             btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
             btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
             btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
-            btnLaunch.UseWaitCursor = false;
+            Launcher.ForceCheck = false;
 
             // Pause Timer
             timer5.Stop();
@@ -743,7 +827,12 @@ namespace AionLauncher
         }
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-          LaunchGame();
+            if (AutoStartTimer.Enabled == true)
+            {
+                AutoStartTimer.Stop();
+                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
+            }  
+            LaunchGame();
         }
         private void CheckVersionLbl_Click(object sender, EventArgs e)
         {
