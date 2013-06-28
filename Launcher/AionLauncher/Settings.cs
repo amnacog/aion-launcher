@@ -86,6 +86,9 @@ namespace AionLauncher
             patchUrl.Text = PATCH;
             CountryCode.Text = CC;
             Settings.BannerCode = 0;
+
+            if (Launcher.ForceCheck == true)
+                FUpdateBtn.Text = "Cancel update ?";
         }
 
         //Events
@@ -150,8 +153,11 @@ namespace AionLauncher
 
                 if (FUpdateBtn.Text == "We will do..")
                 {
-                    bool fupdate = true;
-                    Launcher.ForceCheck = fupdate;
+                    Launcher.ForceCheck = true;
+                }
+                else if (FUpdateBtn.Text == "Cancelled..")
+                {
+                    Launcher.ForceCheck = false;
                 }
                 string CurrentNEWSFEEDURL = miscSection.Get("BannerUrl");
                 if (CurrentNEWSFEEDURL != newsUrl.Text)
@@ -180,11 +186,24 @@ namespace AionLauncher
         }
         private void FUpdateBtn_Click(object sender, EventArgs e)
         {
-            FUpdateBtn.Text = "We will do..";
-            FUpdateBtn.Enabled = false;
-            FUpdateBtn.BackColor = Color.DarkOrange;
-            FUpdateBtn.ForeColor = Color.Black;
+            if (Launcher.ForceCheck == true)
+            {
+                bool fupdate = false;
+                Launcher.ForceCheck = fupdate;
+                FUpdateBtn.Text = "Cancelled..";
+                FUpdateBtn.Enabled = false;
+                FUpdateBtn.BackColor = Color.DarkOrange;
+                FUpdateBtn.ForeColor = Color.Black;
+            }
+            else
+            {
+                FUpdateBtn.Text = "We will do..";
+                FUpdateBtn.Enabled = false;
+                FUpdateBtn.BackColor = Color.DarkOrange;
+                FUpdateBtn.ForeColor = Color.Black;
+            }
         }
+
         private void checkSrvBtn_Click(object sender, EventArgs e)
         {
             string HOST = ipBox.Text;
