@@ -350,22 +350,17 @@ namespace AionLauncher
 
             //Get string
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
-            try
-            {
-                HttpWebRequest request = WebRequest.Create(NEWSFEEDURL) as HttpWebRequest;
-                request.Method = "HEAD";
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            
+                if (NEWSFEEDURL == "" | NEWSFEEDURL == null | NEWSFEEDURL == "http://")
+                {
+                    string news = "";
+                    this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
+                    this.lblNews.Text = news;
+                    this.BannerBrowser.Visible = false; 
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                }else{
                     this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
                     this.BannerBrowser.Visible = true; 
-            }
-            catch
-            {
-                string news = "";
-                this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
-                this.lblNews.Text = news;
-                this.BannerBrowser.Visible = false; 
             }
             NewsTimer.Stop();
         }

@@ -38,6 +38,7 @@ namespace AionLauncher
         public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
         string lpFileName);
         public static int BannerCode { get; set; }
+        public static bool Bannerisright { get; set; }
 
         protected override void OnTextChanged(System.EventArgs e)
         {
@@ -165,8 +166,9 @@ namespace AionLauncher
                     string ChBanner = newsUrl.Text;
                     Launcher.ChangeBanner = ChBanner;
                 }
-                string CurrentLaunchLANG = miscSection.Get("LaunchLanguage");
-                if(LaunchLANG != CurrentLaunchLANG ){
+                if (Bannerisright == false){NEWSFEEDURL = miscSection.Get("BannerUrl");}
+
+                if(LaunchLANG != miscSection.Get("LaunchLanguage") ){
                     MessageBox.Show("The launcher will restart to apply the new language", "Restart", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Application.Restart();
                 }
@@ -272,6 +274,7 @@ namespace AionLauncher
                         checkNewsBtn.BackColor = System.Drawing.Color.LimeGreen;
                         checkNewsBtn.ForeColor = System.Drawing.Color.DarkGreen;
                         checkNewsBtn.Enabled = false;
+                        Bannerisright = true;
                     }
                     response.Close();
                 }
@@ -289,6 +292,7 @@ namespace AionLauncher
                             checkNewsBtn.BackColor = System.Drawing.Color.Red;
                             checkNewsBtn.ForeColor = System.Drawing.Color.DarkRed;
                             MessageBox.Show("Unable to load the page : " + (int)response.StatusCode, "Connection Error " + (int)response.StatusCode, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Settings.Bannerisright = false;
                         }
                     }
                 }
