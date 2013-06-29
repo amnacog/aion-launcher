@@ -40,10 +40,6 @@ namespace AionLauncher
         public static int BannerCode { get; set; }
         public static bool Bannerisright { get; set; }
 
-        protected override void OnTextChanged(System.EventArgs e)
-        {
-            AutoFill();
-        }
         private void AutoFill()
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
@@ -93,6 +89,10 @@ namespace AionLauncher
         }
 
         //Events
+        protected override void OnTextChanged(System.EventArgs e)
+        {
+            AutoFill();
+        }
         private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -113,7 +113,7 @@ namespace AionLauncher
         {
             AutoFill();
         }
-        public void Confirm_Click(object sender, EventArgs e)
+        private void Confirm_Click(object sender, EventArgs e)
         {
             string LaunchLANG = Lang1.Text;
             string LANG = Lang2.Text;
@@ -163,8 +163,7 @@ namespace AionLauncher
                 string CurrentNEWSFEEDURL = miscSection.Get("BannerUrl");
                 if (CurrentNEWSFEEDURL != newsUrl.Text)
                 {
-                    string ChBanner = newsUrl.Text;
-                    Launcher.ChangeBanner = ChBanner;
+                    Launcher.ChangeBanner = newsUrl.Text;
                 }
                 if (Bannerisright == false){NEWSFEEDURL = miscSection.Get("BannerUrl");}
 
@@ -205,7 +204,6 @@ namespace AionLauncher
                 FUpdateBtn.ForeColor = Color.Black;
             }
         }
-
         private void checkSrvBtn_Click(object sender, EventArgs e)
         {
             string HOST = ipBox.Text;
@@ -314,7 +312,6 @@ namespace AionLauncher
         {
             Settings.BannerCode = 1;
         }
-
         private void Drag_Click(object sender, EventArgs e)
         {
 

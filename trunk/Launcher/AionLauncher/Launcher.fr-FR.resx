@@ -205,7 +205,8 @@ LE JEU
     <value>Etat serveur:</value>
   </data>
   <data name="MsgCheckVrsNew" xml:space="preserve">
-    <value>Une nouvelle version du launcher est disponible</value>
+    <value>Une nouvelle version du launcher est disponible
+</value>
   </data>
   <data name="MsgCheckVrsNew1" xml:space="preserve">
     <value>Mise à jour disponible: </value>
@@ -253,5 +254,8 @@ LA MISE
   </data>
   <data name="label1.Text.ccl" xml:space="preserve">
     <value>Mise à jour annulée..</value>
+  </data>
+  <data name="MsgCheckVrsNewDl" xml:space="preserve">
+    <value>Télécharger ?</value>
   </data>
 </root>
