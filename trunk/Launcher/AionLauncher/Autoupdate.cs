@@ -74,6 +74,7 @@ namespace AionLauncher
                 Thread.Sleep(10);
             }
             this.Hide();
+            Application.Exit();
         }
     }
 }
