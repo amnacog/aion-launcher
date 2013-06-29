@@ -21705,4 +21705,7 @@ THE UPDATE</value>
   <data name="label1.Text.ccl" xml:space="preserve">
     <value>Update cancelled..</value>
   </data>
+  <data name="MsgCheckVrsNewDl" xml:space="preserve">
+    <value>Download ?</value>
+  </data>
 </root>

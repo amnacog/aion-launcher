@@ -47,7 +47,6 @@ namespace AionLauncher
             LoadFont();
             btnLaunch.Font = new Font(private_fonts.Families[0], 9.5F);
             btnLaunch.UseCompatibleTextRendering = true;
-        
 
         } //end constructor
 
@@ -69,12 +68,14 @@ namespace AionLauncher
         public static bool ForceCheck { get; set; }
         public static int BannerCode { get; set; }
         public static string ChangeBanner { get; set; }
-        public string lang { get; set; }
+        public static string lang { get; set; }
+        public static string setupurl { get; set; }
         public CultureInfo ci { get; set; }
+
         public ResourceManager resman = new ResourceManager("AionLauncher.Launcher", Assembly.GetExecutingAssembly());
 
         //call lang
-        void LoadLang()
+        private void LoadLang()
         {
             string cl = lang;
             if (System.IO.File.Exists("launcher.ini"))
@@ -226,6 +227,7 @@ namespace AionLauncher
                 }
             }
         }
+
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
@@ -268,6 +270,7 @@ namespace AionLauncher
                 Thread.Sleep(5000);
             } //end while
         }
+
         //this is a delegate used to access the UI from another thread
         private delegate void SetControlPropertyThreadSafeDelegate(Control control, string propertyName, object propertyValue);
         public static void SetControlPropertyThreadSafe(Control control, string propertyName, object propertyValue)
@@ -340,7 +343,7 @@ namespace AionLauncher
                 //end if
             } //end btnLaunch_Click
         }
-        //Events
+
         //news
         private void news_Tick(object sender, EventArgs e)
         {
@@ -364,6 +367,7 @@ namespace AionLauncher
             }
             NewsTimer.Stop();
         }
+
         //Refresh Banner if changed
         private void ChangedBanner()
         {
@@ -405,6 +409,8 @@ namespace AionLauncher
                 btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
             }
         }
+
+        //Write New launcher.ini conf
         private class NewIni
         {
             string NL = Environment.NewLine;
@@ -429,7 +435,6 @@ namespace AionLauncher
                 System.IO.File.WriteAllText(@"version.ini", toWrite);
             }
         }
-        //Write New launcher.ini conf
         private class NewIniConf
         {
             string NL = Environment.NewLine;
@@ -479,6 +484,7 @@ namespace AionLauncher
                 System.IO.File.WriteAllText(@"launcher.ini", toWrite);
             }
         }
+
         //Validate Ip/Dns
         private string ValidateIP(string ip)
         {
@@ -513,7 +519,9 @@ namespace AionLauncher
             System.Diagnostics.Process.Start(url);
         }
 
-        private void cclupdate(){
+        //Proceed to update
+        private void cclupdate()
+        {
             if (btnLaunch.Text == resman.GetString("btnLaunch.Text.ccl", ci))
             {
                 btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
@@ -525,7 +533,7 @@ namespace AionLauncher
                 {
                     File.Delete("bin32.zip");
                 }
-                
+
             }
             timer1.Stop();
             timer2.Stop();
@@ -536,8 +544,6 @@ namespace AionLauncher
             progressBar2.Value = 0;
             label1.Text = "Ready to update..";
         }
-
-        //Proceed to update
         private void timer1_Tick(object sender, EventArgs e)
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
@@ -607,7 +613,6 @@ namespace AionLauncher
             }
 
         }
-
         private void timer2_Tick(object sender, EventArgs e)
         {
             // New
@@ -732,6 +737,8 @@ namespace AionLauncher
             LaunchGame();
         }
 
+        //CheckVersion (PLEASE DO NOT MODIFY THESE LINES) --------------------------------///
+
         //get informations
         public class JsonHelper
         {
@@ -750,7 +757,6 @@ namespace AionLauncher
             public string gameclient { get; set; }
             public string download { get; set; }
         }
-        //CheckVersion (Please do not modify these lines)
         private void CheckVersions()
         {
             if (Environment.OSVersion.Version >= new Version(6, 0))
@@ -766,6 +772,7 @@ namespace AionLauncher
                     string getDownload = LauncherJson.download;
                     string getgameclient = LauncherJson.gameclient;
                     string getChangelog = LauncherJson.changelog;
+                    Launcher.setupurl = getDownload;
 
 
                     if (currentVersion != getVersion)
@@ -809,7 +816,7 @@ namespace AionLauncher
                 this.CheckVersionLbl.LinkColor = System.Drawing.Color.Red;
             }
         }
-
+        //--------------------------------End Updater----------------------------------///
 
         //call events
         private void drag_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -837,7 +844,13 @@ namespace AionLauncher
 
             if (CheckVersionLbl.Text == resman.GetString("CheckVersionNewlbl", ci))
             {
-                System.Diagnostics.Process.Start(LauncherJson.download);
+                DialogResult update = MessageBox.Show(resman.GetString("MsgCheckVrsNew", ci) + "\r\n\r\n" + LauncherJson.changelog + "\r\n\r\n" + resman.GetString("MsgCheckVrsNewDl", ci), resman.GetString("MsgCheckVrsNew1", ci) + LauncherJson.version, MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (update == DialogResult.Yes)
+                {
+                    this.Hide();
+                    var UpdaterWindow = new Autoupdate();
+                    UpdaterWindow.ShowDialog(this);
+                }
             }
             if (CheckVersionLbl.Text == "Incompatible")
             {
