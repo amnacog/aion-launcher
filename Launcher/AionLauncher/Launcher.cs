@@ -110,6 +110,12 @@ namespace AionLauncher
         }
         private void Launcher_Load(object sender, EventArgs e)
         {
+            //delete current setup
+            string setupfile = "AionLauncher-" + Application.ProductVersion + " Setup.exe";
+            if (System.IO.File.Exists(setupfile))
+            {
+                File.Delete(setupfile);
+            }
             //Test launcher.ini (if all filled and set lang selectbox)
             if (!System.IO.File.Exists("launcher.ini"))
             {
