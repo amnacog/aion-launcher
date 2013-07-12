@@ -59,17 +59,20 @@
             this.portBox = new System.Windows.Forms.TextBox();
             this.logPort = new System.Windows.Forms.Label();
             this.iplbl = new System.Windows.Forms.Label();
+            this.checkSrvBtn = new Glass.GlassButton();
             this.ipBox = new System.Windows.Forms.TextBox();
             this.serverLbl = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.splitContainer9 = new System.Windows.Forms.SplitContainer();
             this.extraOpts = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.checkNewsBtn = new Glass.GlassButton();
             this.newsUrl = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.splitContainer10 = new System.Windows.Forms.SplitContainer();
+            this.FUpdateBtn = new Glass.GlassButton();
             this.patchUrl = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -78,9 +81,6 @@
             this.Reset = new System.Windows.Forms.Button();
             this.Confirm = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.checkSrvBtn = new Glass.GlassButton();
-            this.checkNewsBtn = new Glass.GlassButton();
-            this.FUpdateBtn = new Glass.GlassButton();
             this.CloseBtn = new Glass.GlassButton();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -431,6 +431,17 @@
             this.iplbl.ForeColor = System.Drawing.Color.Black;
             this.iplbl.Name = "iplbl";
             // 
+            // checkSrvBtn
+            // 
+            this.checkSrvBtn.BackColor = System.Drawing.Color.DimGray;
+            this.checkSrvBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.checkSrvBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.checkSrvBtn, "checkSrvBtn");
+            this.checkSrvBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.checkSrvBtn.Name = "checkSrvBtn";
+            this.checkSrvBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.checkSrvBtn.Click += new System.EventHandler(this.checkSrvBtn_Click);
+            // 
             // ipBox
             // 
             this.ipBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
@@ -496,6 +507,17 @@
             this.label10.ForeColor = System.Drawing.Color.Black;
             this.label10.Name = "label10";
             // 
+            // checkNewsBtn
+            // 
+            this.checkNewsBtn.BackColor = System.Drawing.Color.DimGray;
+            this.checkNewsBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.checkNewsBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.checkNewsBtn, "checkNewsBtn");
+            this.checkNewsBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.checkNewsBtn.Name = "checkNewsBtn";
+            this.checkNewsBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.checkNewsBtn.Click += new System.EventHandler(this.checkBnrBtn_Click);
+            // 
             // newsUrl
             // 
             this.newsUrl.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -541,6 +563,17 @@
             // 
             this.splitContainer10.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
             this.splitContainer10.Panel2.Controls.Add(this.label6);
+            // 
+            // FUpdateBtn
+            // 
+            this.FUpdateBtn.BackColor = System.Drawing.Color.DimGray;
+            this.FUpdateBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.FUpdateBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.FUpdateBtn, "FUpdateBtn");
+            this.FUpdateBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.FUpdateBtn.Name = "FUpdateBtn";
+            this.FUpdateBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.FUpdateBtn.Click += new System.EventHandler(this.FUpdateBtn_Click);
             // 
             // patchUrl
             // 
@@ -595,39 +628,6 @@
             // notifyIcon1
             // 
             resources.ApplyResources(this.notifyIcon1, "notifyIcon1");
-            // 
-            // checkSrvBtn
-            // 
-            this.checkSrvBtn.BackColor = System.Drawing.Color.DimGray;
-            this.checkSrvBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.checkSrvBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.checkSrvBtn, "checkSrvBtn");
-            this.checkSrvBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.checkSrvBtn.Name = "checkSrvBtn";
-            this.checkSrvBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.checkSrvBtn.Click += new System.EventHandler(this.checkSrvBtn_Click);
-            // 
-            // checkNewsBtn
-            // 
-            this.checkNewsBtn.BackColor = System.Drawing.Color.DimGray;
-            this.checkNewsBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.checkNewsBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.checkNewsBtn, "checkNewsBtn");
-            this.checkNewsBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.checkNewsBtn.Name = "checkNewsBtn";
-            this.checkNewsBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.checkNewsBtn.Click += new System.EventHandler(this.checkBnrBtn_Click);
-            // 
-            // FUpdateBtn
-            // 
-            this.FUpdateBtn.BackColor = System.Drawing.Color.DimGray;
-            this.FUpdateBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.FUpdateBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.FUpdateBtn, "FUpdateBtn");
-            this.FUpdateBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.FUpdateBtn.Name = "FUpdateBtn";
-            this.FUpdateBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.FUpdateBtn.Click += new System.EventHandler(this.FUpdateBtn_Click);
             // 
             // CloseBtn
             // 

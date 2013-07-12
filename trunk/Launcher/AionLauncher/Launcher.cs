@@ -16,10 +16,11 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Nini.Config;
-using Ionic.Zip;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
+using Nini.Config;
+using Ionic.Zip;
 
 namespace AionLauncher
 {
@@ -110,13 +111,13 @@ namespace AionLauncher
         }
         private void Launcher_Load(object sender, EventArgs e)
         {
-            //delete current setup
+            //delete setup
             string setupfile = "AionLauncher-" + Application.ProductVersion + " Setup.exe";
             if (System.IO.File.Exists(setupfile))
             {
                 File.Delete(setupfile);
             }
-            //Test launcher.ini (if all filled and set lang selectbox)
+            //Test launcher.ini & show settings menu before main form
             if (!System.IO.File.Exists("launcher.ini"))
             {
                 var NewIniConf = new NewIniConf();
@@ -143,14 +144,6 @@ namespace AionLauncher
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
             bool AUTOL = miscSection.GetBoolean("AutoStart");
             string LAUNLANG = miscSection.Get("LaunchLanguage");
-
-            //set the lang selectbox
-            LANG = LANG.Replace("fr", "FR");
-            LANG = LANG.Replace("de", "DE");
-            LANG = LANG.Replace("en", "EN");
-            LANG = LANG.Replace("es", "ES");
-            LANG = LANG.Replace("ru", "RU");
-
             }
             catch (Exception)
             {
@@ -179,7 +172,7 @@ namespace AionLauncher
                     //Update
                     btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
                     btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                    label1.Text = resman.GetString("label1.Text.ready", ci);
+                    label1.Text = resman.GetString("label1.Text.ready", ci) + " ("+ md5client(null) + ")";
                     btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
                     } else {
                         this.Opacity = 0f;
@@ -188,7 +181,7 @@ namespace AionLauncher
                     // Update Progress Bars etc.
                     progressBar1.Value = 100;
                     progressBar2.Value = 100;
-                    label1.Text = resman.GetString("label1.Text.latest", ci);
+                    label1.Text = resman.GetString("label1.Text.latest", ci) + " (" + md5client(null) + ")";
 
                     Thread AutoStartThread = new Thread(new ThreadStart(this.AutoStart));
                     AutoStartThread.Start();
@@ -213,8 +206,11 @@ namespace AionLauncher
             CheckVersionThread.Start();
 
         } //end Launcher_Load
+
         private void AutoStart()
-        {            IniConfigSource launcher = new IniConfigSource("launcher.ini");
+        {
+            Thread.CurrentThread.Name = "AutoStart";
+            IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig miscSection = launcher.Configs["Misc"];
             bool AUTOL = miscSection.GetBoolean("AutoStart");
             if (AUTOL == true)
@@ -237,15 +233,14 @@ namespace AionLauncher
         //this pings the HOST and PORT specified in the Config class every 5 seconds as long as the program is running
         private void CheckServerStatus()
         {
-            //Begin new instance nini
-            IniConfigSource launcher = new IniConfigSource("launcher.ini");
-            IConfig connectionSection = launcher.Configs["Connection"];
-
-            //Get string-int
-            string HOST = connectionSection.Get("IP");
-            int PORT = connectionSection.GetInt("LoginPort");
             while (true)
-            {
+            {   
+                //Begin new instance nini
+                IniConfigSource launcher = new IniConfigSource("launcher.ini");
+                IConfig connectionSection = launcher.Configs["Connection"];
+                //Get string-int
+                string HOST = connectionSection.Get("IP");
+                int PORT = connectionSection.GetInt("LoginPort");
                 using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                 {
                     try
@@ -255,7 +250,6 @@ namespace AionLauncher
                             MessageBox.Show(resman.GetString("MsgInvalidHost", ci), resman.GetString("MsgInvalidHost1", ci), MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
                         } //end if
-
                         socket.Connect(HOST, PORT);
                         socket.Close();
 
@@ -263,13 +257,10 @@ namespace AionLauncher
                         SetControlPropertyThreadSafe(lblServerStatus, "ForeColor", Color.Green);
 
                     }
-                    catch (SocketException ex)
+                    catch (Exception)
                     {
-                        if (ex.SocketErrorCode == SocketError.ConnectionRefused)
-                        {
-                            SetControlPropertyThreadSafe(lblServerStatus, "Text", resman.GetString("lblServerStatusOff", ci));
-                            SetControlPropertyThreadSafe(lblServerStatus, "ForeColor", Color.Red);
-                        } //end if
+                        SetControlPropertyThreadSafe(lblServerStatus, "Text", resman.GetString("lblServerStatusOff", ci));
+                        SetControlPropertyThreadSafe(lblServerStatus, "ForeColor", Color.Red);
                     } //end try/catch
                 } //end using
                 //only check every 5 seconds while the program is up.
@@ -512,6 +503,48 @@ namespace AionLauncher
             return returnValue;
         }
 
+        //get aion.bin md5
+        private static string getmd5bin(string bin)
+        {
+            using (var md5 = new MD5CryptoServiceProvider())
+            {
+                var buffer = md5.ComputeHash(File.ReadAllBytes(bin));
+                var sb = new StringBuilder();
+                for (int i = 0; i < buffer.Length; i++)
+                {
+                    sb.Append(buffer[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+        }
+        private string md5client(string cake)
+        {
+            string md5 = getmd5bin("bin32\\aion.bin");
+            string gameversion = null;
+            switch (md5)
+            {
+                case "b793ed59416e8d7ea9c8c8f3e299992b":
+                    gameversion = "2.5";
+                break;
+                case "1c01d261c308a4612188be7a59b11c32":
+                    gameversion = "2.7";
+                break;
+                case "78d79e15805c6cb9e488301a7f81d95d":
+                gameversion = "3.0";
+                break;
+                case "f5ae1e3020ab1ab69bf45710ed369c45":
+                gameversion = "3.5|7|9";
+                break;
+                case "e5139efa878038ca40e176a228fa2701":
+                gameversion = "4.0";
+                break;
+                default:
+                gameversion = "na";
+                break;
+            }
+            return gameversion;
+        }
+
         //Launch Nav
         private void BannerBrowser_NewWindow(object sender, CancelEventArgs e)
         {
@@ -539,7 +572,6 @@ namespace AionLauncher
                 {
                     File.Delete("bin32.zip");
                 }
-
             }
             timer1.Stop();
             timer2.Stop();
@@ -743,7 +775,7 @@ namespace AionLauncher
             LaunchGame();
         }
 
-        //CheckVersion (PLEASE DO NOT MODIFY THESE LINES) --------------------------------///
+        //CheckVersion ----------------------------------------------------------------///
 
         //get informations
         public class JsonHelper
@@ -765,6 +797,7 @@ namespace AionLauncher
         }
         private void CheckVersions()
         {
+            Thread.CurrentThread.Name = "CheckVersions";
             if (Environment.OSVersion.Version >= new Version(6, 0))
             {
                 try
@@ -877,6 +910,7 @@ namespace AionLauncher
         }
         private void btnExit_Click(object sender, EventArgs e)
         {
+            if (AutoStartTimer.Enabled == true) { AutoStartTimer.Enabled = false; }
             while(this.Opacity != 0)
             {
             this.Opacity -= 0.05;
