@@ -72,6 +72,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.splitContainer10 = new System.Windows.Forms.SplitContainer();
+            this.desiredvrs = new System.Windows.Forms.ComboBox();
             this.FUpdateBtn = new Glass.GlassButton();
             this.patchUrl = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -179,7 +180,6 @@
             this.Drag.BackColor = System.Drawing.SystemColors.ScrollBar;
             resources.ApplyResources(this.Drag, "Drag");
             this.Drag.Name = "Drag";
-            this.Drag.Click += new System.EventHandler(this.Drag_Click);
             this.Drag.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drag_MouseDown);
             // 
             // TabControl
@@ -554,6 +554,7 @@
             // splitContainer10.Panel1
             // 
             this.splitContainer10.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
+            this.splitContainer10.Panel1.Controls.Add(this.desiredvrs);
             this.splitContainer10.Panel1.Controls.Add(this.FUpdateBtn);
             this.splitContainer10.Panel1.Controls.Add(this.patchUrl);
             this.splitContainer10.Panel1.Controls.Add(this.label5);
@@ -563,6 +564,20 @@
             // 
             this.splitContainer10.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
             this.splitContainer10.Panel2.Controls.Add(this.label6);
+            // 
+            // desiredvrs
+            // 
+            this.desiredvrs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.desiredvrs.FormattingEnabled = true;
+            this.desiredvrs.Items.AddRange(new object[] {
+            resources.GetString("desiredvrs.Items"),
+            resources.GetString("desiredvrs.Items1"),
+            resources.GetString("desiredvrs.Items2"),
+            resources.GetString("desiredvrs.Items3"),
+            resources.GetString("desiredvrs.Items4"),
+            resources.GetString("desiredvrs.Items5")});
+            resources.ApplyResources(this.desiredvrs, "desiredvrs");
+            this.desiredvrs.Name = "desiredvrs";
             // 
             // FUpdateBtn
             // 
@@ -766,5 +781,6 @@
         private System.Windows.Forms.ComboBox CountryCode;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ComboBox desiredvrs;
     }
 }

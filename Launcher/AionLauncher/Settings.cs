@@ -52,7 +52,8 @@ namespace AionLauncher
             string OPTIONS = gameSection.Get("Options");
             string LANG = gameSection.Get("Language");
             string CC = gameSection.Get("CountryCode");
-            string PATCH = patchSection.Get("Bin");
+            string PATCHPATH = patchSection.Get("PatchPath");
+            string PATCHVERSION = patchSection.Get("PatchVersion");
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
             bool AUTOS = miscSection.GetBoolean("AutoStart");
             string LaunchLANG = miscSection.Get("LaunchLanguage");
@@ -80,12 +81,14 @@ namespace AionLauncher
             portBox.Text = PORT;
             extraOpts.Text = OPTIONS;
             newsUrl.Text = NEWSFEEDURL;
-            patchUrl.Text = PATCH;
+            patchUrl.Text = PATCHPATH;
+            desiredvrs.Text = PATCHVERSION;
             CountryCode.Text = CC;
             Settings.BannerCode = 0;
+            Launcher.patchvrs = PATCHVERSION;
 
             if (Launcher.ForceCheck == true)
-                FUpdateBtn.Text = "Cancel update ?";
+                FUpdateBtn.Text = "Cancel update";
         }
 
         //Events
@@ -121,7 +124,8 @@ namespace AionLauncher
             int PORT = Convert.ToInt32(portBox.Text);
             string OPTIONS = extraOpts.Text;
             string NEWSFEEDURL = newsUrl.Text;
-            string PATCH = patchUrl.Text;
+            string PATCHPATH = patchUrl.Text;
+            string PATCHVERSION = desiredvrs.Text;
             string CC = CountryCode.Text;
             bool AutoStart = AutoTrue.Checked;
 
@@ -176,7 +180,8 @@ namespace AionLauncher
                 gameSection.Set("Options", OPTIONS);
                 gameSection.Set("Language", LANG);
                 gameSection.Set("CountryCode", CC);
-                patchSection.Set("Bin", PATCH);
+                patchSection.Set("PatchPath", PATCHPATH);
+                patchSection.Set("PatchVersion", PATCHVERSION);
                 miscSection.Set("BannerUrl", NEWSFEEDURL);
                 miscSection.Set("AutoStart", AutoStart);
                 miscSection.Set("LaunchLanguage", LaunchLANG);
@@ -312,10 +317,5 @@ namespace AionLauncher
         {
             Settings.BannerCode = 1;
         }
-        private void Drag_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

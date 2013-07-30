@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
+using System.Linq;
 using Nini.Config;
 using Ionic.Zip;
 
@@ -70,6 +71,7 @@ namespace AionLauncher
         public static int BannerCode { get; set; }
         public static string ChangeBanner { get; set; }
         public static string lang { get; set; }
+        public static string patchvrs { get; set; }
         public static string setupurl { get; set; }
         public CultureInfo ci { get; set; }
 
@@ -140,7 +142,9 @@ namespace AionLauncher
             string OPTIONS = gameSection.Get("Options");
             string LANG = gameSection.Get("Language");
             int CC = gameSection.GetInt("CountryCode");
-            string PATCH = patchSection.Get("Bin");
+            string PATCHPATH = patchSection.Get("PatchPath");
+            string PATCHVERSION = patchSection.Get("PatchVersion");
+            patchvrs = PATCHVERSION;
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
             bool AUTOL = miscSection.GetBoolean("AutoStart");
             string LAUNLANG = miscSection.Get("LaunchLanguage");
@@ -161,18 +165,18 @@ namespace AionLauncher
             {
                     this.Opacity = 0f;
                     Application.DoEvents();
-                IniConfigSource version = new IniConfigSource("version.ini");
-                string current = version.Configs["Settings"].Get("Version");
+                string current = md5client(null);
                 // Check if we need to download files
-                if (current != "3.0.0.8" | ForceCheck == true)
+                if ( current != patchvrs | ForceCheck == true)
                 {
+                    ForceCheck = true;
                     //Notify the user
                     MessageBox.Show(resman.GetString("MsgVersionClient", ci), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     //Update
                     btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
                     btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                    label1.Text = resman.GetString("label1.Text.ready", ci) + " ("+ md5client(null) + ")";
+                    label1.Text = resman.GetString("label1.Text.ready", ci) + " ("+ patchvrs + ")";
                     btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
                     } else {
                         this.Opacity = 0f;
@@ -357,10 +361,9 @@ namespace AionLauncher
                     this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
                     this.lblNews.Text = news;
                     this.BannerBrowser.Visible = false; 
-
                 }else{
-                    this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
-                    this.BannerBrowser.Visible = true; 
+                        this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
+                        this.BannerBrowser.Visible = true;
             }
             NewsTimer.Stop();
         }
@@ -467,8 +470,10 @@ namespace AionLauncher
                 + "CountryCode = 2" + NL
                 + "" + NL
                 + "[Patch]" + NL
-                + ";(url/bin32.zip) Place here your patch for the client, must be a zip archive" + NL
-                + "Bin = http://vzoneserver.dyndns.org/aion/bin32.zip" + NL
+                + ";(url/bin32.zip for \"Default\") Place here your patch for the client, must be a zip archive" + NL
+                + "PatchPath = http://vzoneserver.dyndns.org/aion/patch/" + NL
+                + ";(string) The desired version of the patch" + NL
+                + "PatchVersion = Default" + NL
                 + "" + NL
                 + "[Misc]" + NL
                 + ";(url) Place here the webpage for the banner" + NL
@@ -506,15 +511,22 @@ namespace AionLauncher
         //get aion.bin md5
         private static string getmd5bin(string bin)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            if (File.Exists("bin32\\aion.bin"))
             {
-                var buffer = md5.ComputeHash(File.ReadAllBytes(bin));
-                var sb = new StringBuilder();
-                for (int i = 0; i < buffer.Length; i++)
+                using (var md5 = new MD5CryptoServiceProvider())
                 {
-                    sb.Append(buffer[i].ToString("x2"));
+                    var buffer = md5.ComputeHash(File.ReadAllBytes(bin));
+                    var sb = new StringBuilder();
+                    for (int i = 0; i < buffer.Length; i++)
+                    {
+                        sb.Append(buffer[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
+            }
+            else
+            {
+                return "";
             }
         }
         private string md5client(string cake)
@@ -527,13 +539,13 @@ namespace AionLauncher
                     gameversion = "2.5";
                 break;
                 case "1c01d261c308a4612188be7a59b11c32":
-                    gameversion = "2.7";
+                    gameversion = "2.7|9";
                 break;
                 case "78d79e15805c6cb9e488301a7f81d95d":
                 gameversion = "3.0";
                 break;
                 case "f5ae1e3020ab1ab69bf45710ed369c45":
-                gameversion = "3.5|7|9";
+                gameversion = "3.5|9";
                 break;
                 case "e5139efa878038ca40e176a228fa2701":
                 gameversion = "4.0";
@@ -586,19 +598,14 @@ namespace AionLauncher
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig patchSection = launcher.Configs["Patch"];
-            string PATCH = patchSection.Get("Bin");
-            string strRegex = @"bin32.zip";
-            RegexOptions myRegexOptions = RegexOptions.None;
-            Regex myRegex = new Regex(strRegex, myRegexOptions);
-            string strReplace = @"";
-            string URL = myRegex.Replace(PATCH, strReplace);
+            string PATCHPATH = patchSection.Get("PatchPath");
 
             // Label change
             label1.Text = "Checking Server...";
 
             try
             {
-                HttpWebRequest request = WebRequest.Create(URL) as HttpWebRequest;
+                HttpWebRequest request = WebRequest.Create(PATCHPATH) as HttpWebRequest;
                 request.Method = "HEAD";
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
                 HttpStatusCode status = response.StatusCode;
@@ -674,10 +681,12 @@ namespace AionLauncher
             // Label change
             label1.Text = "Deleting Old Package...";
 
-            // Download update
-            if (System.IO.File.Exists(System.Environment.CurrentDirectory + "/" + "bin32.zip") == true)
+            // Delete .zip files update
+            var update = Directory.GetFiles(@"C:\", "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".zip"));
+
+            foreach (string file in update)
             {
-                System.IO.File.Delete(System.Environment.CurrentDirectory + "/" + "bin32.zip");
+                File.Delete(file);
             }
 
             // Progress bar update
@@ -694,10 +703,12 @@ namespace AionLauncher
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig patchSection = launcher.Configs["Patch"];
-            string PATCH = patchSection.Get("Bin");
+            string PATCHPATH = patchSection.Get("PatchPath");
+            string filename = "bin32.zip";
+            if (patchvrs != "Default"){filename = md5client(null) + ".zip";}
 
             // Label change
-            label1.Text = "Downloading bin32.zip...";
+            label1.Text = "Downloading zip file...";
 
             // Download Files
             try
@@ -705,7 +716,7 @@ namespace AionLauncher
                 using (WebClient webClient = new WebClient())
                 {
                     //Catch Or download
-                    webClient.DownloadFile(PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
+                    webClient.DownloadFile(PATCHPATH, System.Environment.CurrentDirectory + "/" + filename);
                 }
                 // Progress bar update
                 progressBar1.Value = 0;
@@ -732,14 +743,16 @@ namespace AionLauncher
         }
         private void timer5_Tick(object sender, EventArgs e)
         {
+            string filename = "bin32.zip";
+            if (patchvrs != "Default") { filename = md5client(null) + ".zip"; }
             // Label change
             label1.Text = "Unzipping bin32.zip...";
 
             // Unzipping
-            string ZipToUnpack = "bin32.zip";
+            string ZipToUnpack = filename;
             string TargetDir = System.Environment.CurrentDirectory;
             Console.WriteLine("Extracting file {0} to {1}", ZipToUnpack, TargetDir);
-            using (ZipFile zip = ZipFile.Read("bin32.zip"))
+            using (ZipFile zip = ZipFile.Read(filename))
             {
                 foreach (ZipEntry d in zip)
                 {
