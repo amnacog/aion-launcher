@@ -128,7 +128,7 @@
     <value>153, 13</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>190, 383</value>
+    <value>180, 383</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>38, 13</value>
@@ -180,7 +180,7 @@ STARTEN
     <value>Neueste Version</value>
   </data>
   <data name="label1.Text.ready" xml:space="preserve">
-    <value>Aktualisiert bereit...</value>
+    <value>Aktualisiert bereit: </value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>Aktuell:</value>
@@ -243,7 +243,7 @@ STARTEN
     <value>Fehler: ungültige version.ini</value>
   </data>
   <data name="btnLaunch.Text.ccl" xml:space="preserve">
-    <value>ABBRUCH BEI
+    <value>ABBRUCH EIN
 AKTUALISIERUNG</value>
   </data>
   <data name="label1.Text.ccl" xml:space="preserve">

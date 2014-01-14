@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
+using System.Linq;
 using Nini.Config;
 using Ionic.Zip;
 
@@ -43,7 +44,7 @@ namespace AionLauncher
             };
             //Load Languages
             LoadLang();
-            
+
             //Load Fonts
             LoadFont();
             btnLaunch.Font = new Font(private_fonts.Families[0], 9.5F);
@@ -53,15 +54,15 @@ namespace AionLauncher
 
         //corner
         public const int WM_NCLBUTTONDOWN = 0xA1;
-		public const int HT_CAPTION = 0x2;
+        public const int HT_CAPTION = 0x2;
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
-		
+
         //drag zone
-        [DllImportAttribute ("user32.dll")]
-		public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-		[DllImportAttribute ("user32.dll")]
-		public static extern bool ReleaseCapture();
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
         [DllImport("gdi32.dll", EntryPoint = "AddFontResourceW", SetLastError = true)]
         public static extern int AddFontResource([In][MarshalAs(UnmanagedType.LPWStr)]
         string lpFileName);
@@ -70,6 +71,7 @@ namespace AionLauncher
         public static int BannerCode { get; set; }
         public static string ChangeBanner { get; set; }
         public static string lang { get; set; }
+        public static string patchvrs { get; set; }
         public static string setupurl { get; set; }
         public CultureInfo ci { get; set; }
 
@@ -121,7 +123,7 @@ namespace AionLauncher
             if (!System.IO.File.Exists("launcher.ini"))
             {
                 var NewIniConf = new NewIniConf();
-                MessageBox.Show("This is the first time you launch the Launcher, Generating config files..", "First Time (step 1)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("This is the first time you launch the Launcher, Generating config file..", "First Time (step 1)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Thread.Sleep(500);
                 MessageBox.Show("Before using this Launcher you must modificate the configuration.", "First Time (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnSettings_Click(null, null);
@@ -129,62 +131,94 @@ namespace AionLauncher
 
             try
             {
-            //new instance of nini
-            IniConfigSource launcher = new IniConfigSource("launcher.ini");
-            IConfig connectionSection = launcher.Configs["Connection"];
-            IConfig gameSection = launcher.Configs["Game"];
-            IConfig patchSection = launcher.Configs["Patch"];
-            IConfig miscSection = launcher.Configs["Misc"];
-            string HOST = connectionSection.Get("IP"); //can be DNS or IP.
-            int PORT = connectionSection.GetInt("LoginPort");
-            string OPTIONS = gameSection.Get("Options");
-            string LANG = gameSection.Get("Language");
-            int CC = gameSection.GetInt("CountryCode");
-            string PATCH = patchSection.Get("Bin");
-            string NEWSFEEDURL = miscSection.Get("BannerUrl");
-            bool AUTOL = miscSection.GetBoolean("AutoStart");
-            string LAUNLANG = miscSection.Get("LaunchLanguage");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(resman.GetString("MsgLaunchError",ci), resman.GetString("MsgLaunchError1",ci), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
+                //new instance of nini
+                IniConfigSource launcher = new IniConfigSource("launcher.ini");
+                IConfig connectionSection = launcher.Configs["Connection"];
+                IConfig gameSection = launcher.Configs["Game"];
+                IConfig patchSection = launcher.Configs["Patch"];
+                IConfig miscSection = launcher.Configs["Misc"];
+                string HOST = connectionSection.Get("IP"); //can be DNS or IP.
+                int PORT = connectionSection.GetInt("LoginPort");
+                string OPTIONS = gameSection.Get("Options");
+                string LANG = gameSection.Get("Language");
+                int CC = gameSection.GetInt("CountryCode");
+                bool PATCH = patchSection.GetBoolean("Patch");
+                string PATCHPATH = patchSection.Get("PatchPath");
+                string PATCHVERSION = patchSection.Get("PatchVersion");
+                string NEWSFEEDURL = miscSection.Get("BannerUrl");
+                bool AUTOL = miscSection.GetBoolean("AutoStart");
+                string LAUNLANG = miscSection.Get("LaunchLanguage");
+                patchvrs = PATCHVERSION;
+                if (!PATCH) { patchvrs = "0"; }
 
-            if (!System.IO.File.Exists("version.ini"))
-            {
-                var NewIni = new NewIni();
-                MessageBox.Show(resman.GetString("MsgVersionCreate", ci), resman.GetString("MsgVersionCreate1,ci"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
+            catch (Exception ex)
+            {
+                if (ex.Message.ToString() == "Value not found: Patch")
+                {
+                    IniConfigSource conf = new IniConfigSource("launcher.ini");
+                    conf.Configs["Patch"].Set("Patch", "false");
+                    conf.Save("launcher.ini");
+                    Application.Restart();
+                }
+                DialogResult result;
+                result = MessageBox.Show(resman.GetString("MsgLaunchError", ci), resman.GetString("MsgLaunchError1", ci), MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+                if (result == DialogResult.Retry)
+                {
+                    Application.Restart();
+                }
+                else if (result == DialogResult.Abort)
+                {
+                    Application.Exit();
+                }
+                else if (result == DialogResult.Ignore)
+                {
+                    Thread.Sleep(500);
+                    DialogResult erase;
+                    erase = MessageBox.Show("Do you want to erase the current config file ? \n (Fully recommended..)", "Update (step 1)", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (erase == DialogResult.Yes)
+                    {
+                        var NewIniConf = new NewIniConf();
+                        MessageBox.Show("Erase performed...", "Update (step 2)", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        btnSettings_Click(null, null);
+                    }
+                }
+            }
             try
             {
+                this.Opacity = 0f;
+                Application.DoEvents();
+                string current = md5client(null);
+                // Check if we need to download files
+                if (patchvrs == "Default") { patchvrs = "3.0"; }
+                if (patchvrs == "0" || ForceCheck == false & current == patchvrs)
+                {
                     this.Opacity = 0f;
                     Application.DoEvents();
-                IniConfigSource version = new IniConfigSource("version.ini");
-                string current = version.Configs["Settings"].Get("Version");
-                // Check if we need to download files
-                if (current != "3.0.0.8" | ForceCheck == true)
-                {
-                    //Notify the user
-                    MessageBox.Show(resman.GetString("MsgVersionClient", ci), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    //Update
-                    btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
-                    btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                    label1.Text = resman.GetString("label1.Text.ready", ci) + " ("+ md5client(null) + ")";
-                    btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
-                    } else {
-                        this.Opacity = 0f;
-                        Application.DoEvents();
 
                     // Update Progress Bars etc.
                     progressBar1.Value = 100;
                     progressBar2.Value = 100;
-                    label1.Text = resman.GetString("label1.Text.latest", ci) + " (" + md5client(null) + ")";
+                    label1.Text = resman.GetString("label1.Text.latest", ci) + " (" + current + ")";
 
                     Thread AutoStartThread = new Thread(new ThreadStart(this.AutoStart));
                     AutoStartThread.Start();
+                }
+                else
+                {
+                    ForceCheck = true;
+                    //Notify the user
+                    MessageBox.Show(resman.GetString("MsgVersionClient", ci), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    //Update
+                    btnLaunch.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
+                    btnLaunch.GlowColor = Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
+                    label1.Text = resman.GetString("label1.Text.ready", ci) + " (" + patchvrs + ")";
+                    btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
+                    progressBar1.Style = ProgressBarStyle.Marquee;
+                    progressBar2.Style = ProgressBarStyle.Marquee;
+                    progressBar1.Value = 0;
+                    progressBar2.Value = 0;
                 }
             }
             catch (Exception)
@@ -195,8 +229,8 @@ namespace AionLauncher
 
             //Rounded corners
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width - 0, Height - 0, 6, 6));
-                this.Opacity = 100.0f;
-                this.ShowInTaskbar = true;
+            this.Opacity = 100.0f;
+            this.ShowInTaskbar = true;
 
             Thread StatusThread = new Thread(new ThreadStart(this.CheckServerStatus));
             StatusThread.IsBackground = true;
@@ -213,7 +247,7 @@ namespace AionLauncher
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig miscSection = launcher.Configs["Misc"];
             bool AUTOL = miscSection.GetBoolean("AutoStart");
-            if (AUTOL == true)
+            if (AUTOL)
             {
                 AutoStartTimer.Start();
                 int number = 5;
@@ -234,7 +268,7 @@ namespace AionLauncher
         private void CheckServerStatus()
         {
             while (true)
-            {   
+            {
                 //Begin new instance nini
                 IniConfigSource launcher = new IniConfigSource("launcher.ini");
                 IConfig connectionSection = launcher.Configs["Connection"];
@@ -278,7 +312,7 @@ namespace AionLauncher
             }
             else
             {
-                control.GetType().InvokeMember(propertyName, System.Reflection.BindingFlags.SetProperty, null, control, new object[] { propertyValue });
+                control.GetType().InvokeMember(propertyName, BindingFlags.SetProperty, null, control, new object[] { propertyValue });
             }
 
         }//end SetControlPropertyThreadSafe
@@ -350,17 +384,18 @@ namespace AionLauncher
 
             //Get string
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
-            
-                if (NEWSFEEDURL == "" | NEWSFEEDURL == null | NEWSFEEDURL == "http://")
-                {
-                    string news = "";
-                    this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
-                    this.lblNews.Text = news;
-                    this.BannerBrowser.Visible = false; 
 
-                }else{
-                    this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
-                    this.BannerBrowser.Visible = true; 
+            if (NEWSFEEDURL == "" || NEWSFEEDURL == null || NEWSFEEDURL == "http://")
+            {
+                string news = "";
+                this.news_panel.BackgroundImage = global::AionLauncher.Properties.Resources.u3jsplashblank;
+                this.lblNews.Text = news;
+                this.BannerBrowser.Visible = false;
+            }
+            else
+            {
+                this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, System.UriKind.Absolute);
+                this.BannerBrowser.Visible = true;
             }
             NewsTimer.Stop();
         }
@@ -372,13 +407,12 @@ namespace AionLauncher
 
             if (BannerCode == 200)
             {
-                this.BannerBrowser.Navigate(NEWSFEEDURL);
+                this.BannerBrowser.Url = new System.Uri(NEWSFEEDURL, UriKind.Absolute);
+                this.BannerBrowser.Navigate(new System.Uri(NEWSFEEDURL, UriKind.Absolute));
                 this.BannerBrowser.Visible = true;
                 this.BannerBrowser.Refresh();
             }
-            else if (BannerCode == 0) {
-
-            }
+            else if (BannerCode == 0) { }
             else
             {
                 string news = "";
@@ -389,49 +423,33 @@ namespace AionLauncher
         }
         private void Fcheck()
         {
-            if (ForceCheck == true)
+            if (ForceCheck)
             {
                 //Update
-                btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
-                btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
-                label1.Text = resman.GetString("label1.Text.ready", ci);
+                btnLaunch.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
+                btnLaunch.GlowColor = Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
+                label1.Text = resman.GetString("label1.Text.ready", ci) + " (" + patchvrs + ")";
                 btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
+                progressBar1.Style = ProgressBarStyle.Marquee;
+                progressBar2.Style = ProgressBarStyle.Marquee;
+                progressBar1.Value = 0;
+                progressBar2.Value = 0;
             }
             else
-            {   
+            {
                 //normal state
                 btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
                 btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
-                label1.Text = resman.GetString("label1.Text", ci);
+                label1.Text = resman.GetString("label1.Text", ci) + " (" + md5client(null) + ")";
                 btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                progressBar2.Style = ProgressBarStyle.Blocks;
+                progressBar1.Value = 100;
+                progressBar2.Value = 100;
             }
         }
 
         //Write New launcher.ini conf
-        private class NewIni
-        {
-            string NL = Environment.NewLine;
-
-            public NewIni()
-            {
-                try
-                {
-                    IniConfigSource config = new IniConfigSource("version.ini");
-                }
-                catch (Exception)
-                {
-                    fill_new_ini();
-                }
-            }
-
-            private void fill_new_ini()
-            {
-                string toWrite = ";version.ini" + NL
-                + "[Settings]" + NL
-                + "Version = 3.0.0.0" + NL;
-                System.IO.File.WriteAllText(@"version.ini", toWrite);
-            }
-        }
         private class NewIniConf
         {
             string NL = Environment.NewLine;
@@ -440,6 +458,10 @@ namespace AionLauncher
             {
                 try
                 {
+                    if (System.IO.File.Exists("launcher.ini"))
+                    {
+                        File.Delete("launcher.ini");
+                    }
                     IniConfigSource config = new IniConfigSource("launcher.ini");
                 }
                 catch (Exception)
@@ -450,7 +472,7 @@ namespace AionLauncher
 
             private void fill_new_iniConf()
             {
-                string toWrite = ";Configuration file for the launcher" + NL
+                string toWrite = ";Configuration file for the launcher " + Application.ProductVersion + " (" + DateTime.Now.ToString("d") + ")" + NL
                 + ";This file has been generated by the launcher, for any problem please report to the about section" + NL
                 + "[Connection]" + NL
                 + ";Your login ip/dns server (can be game server ip/dns too)" + NL
@@ -462,13 +484,18 @@ namespace AionLauncher
                 + ";(string) Place here your game options" + NL
                 + "Options = -noauthgg -ls -noweb -nowebshop -ingameshop" + NL
                 + ";(2string) Place here the launguage of your client, one of these : en, de, fr, es, jp" + NL
-                + "Language = fr" + NL
+                + "Language = en" + NL
                 + ";(2int) place here the country code of the server" + NL
-                + "CountryCode = 2" + NL
+                + "CountryCode = 1" + NL
                 + "" + NL
                 + "[Patch]" + NL
-                + ";(url/bin32.zip) Place here your patch for the client, must be a zip archive" + NL
-                + "Bin = http://vzoneserver.dyndns.org/aion/bin32.zip" + NL
+                + "; (bool) Check Game version" + NL
+                + "Patch = false" + NL
+                + ";(url) Place here your path repository of patchs for the client, must be a zip archives(warning not point directly to the file)" + NL
+                + ";for example the \"Default\" file must be named bin32.zip . Others are named by their version (example for 4.0 : 4.0.zip)" + NL
+                + "PatchPath = http://vzoneserver.dyndns.org/aion/patch/" + NL
+                + ";(string) The desired version of the patch" + NL
+                + "PatchVersion = Off" + NL
                 + "" + NL
                 + "[Misc]" + NL
                 + ";(url) Place here the webpage for the banner" + NL
@@ -506,16 +533,19 @@ namespace AionLauncher
         //get aion.bin md5
         private static string getmd5bin(string bin)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            if (File.Exists("bin32\\aion.bin"))
             {
-                var buffer = md5.ComputeHash(File.ReadAllBytes(bin));
-                var sb = new StringBuilder();
-                for (int i = 0; i < buffer.Length; i++)
+                using (var md5 = new MD5CryptoServiceProvider())
                 {
-                    sb.Append(buffer[i].ToString("x2"));
+                    var buffer = md5.ComputeHash(File.ReadAllBytes(bin));
+                    var sb = new StringBuilder();
+                    for (int i = 0; i < buffer.Length; i++)
+                    {
+                        sb.Append(buffer[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
-            }
+            }else{return "";}
         }
         private string md5client(string cake)
         {
@@ -525,22 +555,25 @@ namespace AionLauncher
             {
                 case "b793ed59416e8d7ea9c8c8f3e299992b":
                     gameversion = "2.5";
-                break;
+                    break;
                 case "1c01d261c308a4612188be7a59b11c32":
-                    gameversion = "2.7";
-                break;
+                    gameversion = "2.7|9";
+                    break;
                 case "78d79e15805c6cb9e488301a7f81d95d":
-                gameversion = "3.0";
-                break;
+                    gameversion = "3.0";
+                    break;
                 case "f5ae1e3020ab1ab69bf45710ed369c45":
-                gameversion = "3.5|7|9";
-                break;
+                    gameversion = "3.5|9";
+                    break;
                 case "e5139efa878038ca40e176a228fa2701":
-                gameversion = "4.0";
-                break;
+                    gameversion = "4.0";
+                    break;
+                case "de9cb85c43c7f5a7a2dbd45a48ec59e7":
+                    gameversion = "4.0";
+                    break;
                 default:
-                gameversion = "na";
-                break;
+                    gameversion = "na";
+                    break;
             }
             return gameversion;
         }
@@ -563,14 +596,14 @@ namespace AionLauncher
         {
             if (btnLaunch.Text == resman.GetString("btnLaunch.Text.ccl", ci))
             {
-                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
-                btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
-                btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
-                label1.Text = "Update Canceled..";
-                Launcher.ForceCheck = false;
-                if (System.IO.File.Exists("bin32.zip"))
+                btnLaunch.Text = resman.GetString("btnLaunch.Text.up", ci);
+                btnLaunch.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(149)))), ((int)(((byte)(0)))));
+                btnLaunch.GlowColor = Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(122)))), ((int)(((byte)(0)))));
+                label1.Text = "Update Cancelled..";
+                Launcher.ForceCheck = true;
+                if (System.IO.File.Exists("patch.zip"))
                 {
-                    File.Delete("bin32.zip");
+                    File.Delete("patch.zip");
                 }
             }
             timer1.Stop();
@@ -578,27 +611,24 @@ namespace AionLauncher
             timer3.Stop();
             timer4.Stop();
             timer5.Stop();
+            progressBar1.Style = ProgressBarStyle.Marquee;
+            progressBar2.Style = ProgressBarStyle.Marquee;
             progressBar1.Value = 0;
             progressBar2.Value = 0;
-            label1.Text = "Ready to update..";
+            label1.Text = "Ready to update..(" + patchvrs + ")";
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig patchSection = launcher.Configs["Patch"];
-            string PATCH = patchSection.Get("Bin");
-            string strRegex = @"bin32.zip";
-            RegexOptions myRegexOptions = RegexOptions.None;
-            Regex myRegex = new Regex(strRegex, myRegexOptions);
-            string strReplace = @"";
-            string URL = myRegex.Replace(PATCH, strReplace);
+            string PATCHPATH = patchSection.Get("PatchPath");
 
             // Label change
             label1.Text = "Checking Server...";
 
             try
             {
-                HttpWebRequest request = WebRequest.Create(URL) as HttpWebRequest;
+                HttpWebRequest request = WebRequest.Create(PATCHPATH) as HttpWebRequest;
                 request.Method = "HEAD";
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
                 HttpStatusCode status = response.StatusCode;
@@ -606,6 +636,8 @@ namespace AionLauncher
                 {
                     label1.Text = "Connection OK";
                     // Progress bar update
+                    progressBar1.Style = ProgressBarStyle.Blocks;
+                    progressBar2.Style = ProgressBarStyle.Blocks;
                     progressBar1.Value = 100;
                     progressBar2.Value = 25;
                     // Pause Timer
@@ -618,11 +650,11 @@ namespace AionLauncher
                     label1.Text = "Connection Error";
                     timer1.Stop();
                     MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    label1.Text = "Ready to Update..";
+                    label1.Text = "Ready to Update.." + " (" + patchvrs + ")"; ;
                     cclupdate();
                 }
             }
-            catch(WebException wc)
+            catch (WebException wc)
             {
                 using (WebResponse response = wc.Response)
                 {
@@ -632,7 +664,7 @@ namespace AionLauncher
                         label1.Text = "Connection Error";
                         timer1.Stop();
                         MessageBox.Show("Unable to connect to the game updater, please try again or contact the support", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        label1.Text = "Ready to Update..";
+                        label1.Text = "Ready to Update.." + " (" + patchvrs + ")"; ;
                         cclupdate();
                     }
                     else
@@ -647,16 +679,12 @@ namespace AionLauncher
                         // Timer 2 for updates
                     }
                 }
-                
+
             }
 
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
-            // New
-
-            // Since there is no need for this timer, just update the progressbar etc.
-
             // Label change
             label1.Text = "Re-Configuring Files...";
 
@@ -674,16 +702,17 @@ namespace AionLauncher
             // Label change
             label1.Text = "Deleting Old Package...";
 
-            // Download update
-            if (System.IO.File.Exists(System.Environment.CurrentDirectory + "/" + "bin32.zip") == true)
+            // Delete .zip files update
+            if (System.IO.File.Exists("patch.zip"))
             {
-                System.IO.File.Delete(System.Environment.CurrentDirectory + "/" + "bin32.zip");
+                File.Delete("patch.zip");
             }
 
             // Progress bar update
             progressBar1.Value = 0;
             progressBar1.Value = 100;
             progressBar2.Value = 55;
+            label1.Text = "Downloading zip file...";
 
             // Pause Timer
             timer3.Stop();
@@ -694,10 +723,16 @@ namespace AionLauncher
         {
             IniConfigSource launcher = new IniConfigSource("launcher.ini");
             IConfig patchSection = launcher.Configs["Patch"];
-            string PATCH = patchSection.Get("Bin");
+            string PATCHPATH = patchSection.Get("PatchPath");
+            string filename = "bin32.zip";
+            if (patchvrs != "Default") 
+            { filename = patchvrs + ".zip";
+              filename = filename.Replace("|", "~");
+            }
 
             // Label change
-            label1.Text = "Downloading bin32.zip...";
+            progressBar1.Value = 0;
+            label1.Text = "Downloading zip file...";
 
             // Download Files
             try
@@ -705,41 +740,34 @@ namespace AionLauncher
                 using (WebClient webClient = new WebClient())
                 {
                     //Catch Or download
-                    webClient.DownloadFile(PATCH, System.Environment.CurrentDirectory + "/" + "bin32.zip");
-                }
-                // Progress bar update
-                progressBar1.Value = 0;
-                progressBar1.Value = 100;
-                progressBar2.Value = 85;
-
-                // Pause Timer
-                timer4.Stop();
-                timer5.Start();
+                    Uri uri = new System.Uri(PATCHPATH + "/" + filename);
+                    Autoupdate.setupname = System.IO.Path.GetFileName(uri.LocalPath);
+                    WebClient client = new WebClient();
+                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                    client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+                    client.DownloadFileAsync(uri, System.Environment.CurrentDirectory + "/" + "patch.zip");
+                }           
             }
             catch (WebException ea)
             {
-                    var response = ea.Response as HttpWebResponse;
-                    label1.Text = "Connection Error";
-                    timer4.Stop();
-                    if (ea.Status == WebExceptionStatus.ProtocolError)
-                    {
-                        MessageBox.Show("Unable to download the file (" + (int)response.StatusCode +" "+ ((HttpWebResponse)ea.Response).StatusDescription + ")", "Connection Error: (" + (int)response.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    label1.Text = "Ready to Update..";
-                    cclupdate();
+                var response = ea.Response as HttpWebResponse;
+                label1.Text = "Connection Error";
+                timer4.Stop();
+                if (ea.Status == WebExceptionStatus.ProtocolError)
+                {
+                    MessageBox.Show("Unable to download the file (" + (int)response.StatusCode + " " + ((HttpWebResponse)ea.Response).StatusDescription + ")", "Connection Error: (" + (int)response.StatusCode + ")", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                label1.Text = "Ready to Update.." + " (" + patchvrs + ")"; ;
+                cclupdate();
             }
-
         }
         private void timer5_Tick(object sender, EventArgs e)
         {
-            // Label change
-            label1.Text = "Unzipping bin32.zip...";
-
             // Unzipping
-            string ZipToUnpack = "bin32.zip";
+            string ZipToUnpack = "patch.zip";
             string TargetDir = System.Environment.CurrentDirectory;
             Console.WriteLine("Extracting file {0} to {1}", ZipToUnpack, TargetDir);
-            using (ZipFile zip = ZipFile.Read("bin32.zip"))
+            using (ZipFile zip = ZipFile.Read("patch.zip"))
             {
                 foreach (ZipEntry d in zip)
                 {
@@ -747,25 +775,48 @@ namespace AionLauncher
                 }
             }
 
-            label1.Text = "Updating ini...";
-            // Get configs
-            IniConfigSource version = new IniConfigSource("version.ini");
-            version.Configs["Settings"].Set("Version", "3.0.0.8");
-            version.Save("version.ini");
-
             // Progress bar update
             progressBar1.Value = 100;
             progressBar2.Value = 100;
-
-            label1.Text = "Update Complete...";
-            btnLaunch.BackColor = System.Drawing.Color.MediumBlue;
-            btnLaunch.GlowColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
-            btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
-            Launcher.ForceCheck = false;
-
             // Pause Timer
             timer5.Stop();
 
+            if (patchvrs == "Default") { patchvrs = "3.0"; }
+            if (md5client(null) != patchvrs)
+            {
+                MessageBox.Show("Error, the update has failed (Target version: " + patchvrs + "; Current version: " + md5client(null) + ")", "Update failed...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cclupdate();
+            }
+            else
+            {
+                label1.Text = "Update Complete..." + " (" + md5client(null) + ")";
+                btnLaunch.BackColor = Color.MediumBlue;
+                btnLaunch.GlowColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(61)))), ((int)(((byte)(245)))));
+                btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
+                Launcher.ForceCheck = false;
+            }
+        }
+        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+            int percent = int.Parse(Math.Truncate(percentage).ToString());
+            progressBar1.Value = percent;
+            progressBar1.Refresh();
+        }
+        private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            // Label change
+            label1.Text = "Extracting patch...";
+
+            // Progress bar update
+            progressBar1.Value = 100;
+            progressBar2.Value = 85;
+
+            // Pause Timer
+            timer4.Stop();
+            timer5.Start();
         }
 
         //Timeout Launcher
@@ -819,20 +870,20 @@ namespace AionLauncher
 
                         this.Loading.Image = global::AionLauncher.Properties.Resources.update;
                         if (lang == "fr-FR")
-                        {SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(460, 393));}
+                        {SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new Point(460, 393));}
                         else if (lang == "de-DE") { SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(480, 393)); }
-                        else { SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(510, 393)); }
+                        else { SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new Point(510, 393)); }
                         SetControlPropertyThreadSafe(CheckVersionLbl, "Text", resman.GetString("CheckVersionNewlbl", ci));
-                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
-                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkColor", System.Drawing.SystemColors.MenuHighlight);
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", LinkBehavior.SystemDefault);
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "LinkColor", SystemColors.MenuHighlight);
                         MessageBox.Show(resman.GetString("MsgCheckVrsNew", ci) + "\r\n\r\n" + getChangelog, resman.GetString("MsgCheckVrsNew1", ci) + getVersion, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     }
                     else
                     {
                         this.Loading.Image = global::AionLauncher.Properties.Resources.check;
-                        SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(575, 393));
-                        SetControlPropertyThreadSafe(CheckVersionLbl, "Size", new System.Drawing.Size(40, 13));
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new Point(575, 393));
+                        SetControlPropertyThreadSafe(CheckVersionLbl, "Size", new Size(40, 13));
                         SetControlPropertyThreadSafe(CheckVersionLbl, "Text", currentVersion);
 
                     }
@@ -840,8 +891,8 @@ namespace AionLauncher
                 catch(Exception)
                 {
                     this.Loading.Image = null;
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(535, 393));
-                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new Point(535, 393));
+                    SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", LinkBehavior.SystemDefault);
                     SetControlPropertyThreadSafe(CheckVersionLbl, "Text", resman.GetString("CheckVrersionErrorlbl", ci));
                     this.CheckVersionLbl.LinkColor = System.Drawing.Color.Red;
                 }
@@ -849,8 +900,8 @@ namespace AionLauncher
             else
             {
                 this.Loading.Image = null;
-                SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new System.Drawing.Point(535, 393));
-                SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", System.Windows.Forms.LinkBehavior.SystemDefault);
+                SetControlPropertyThreadSafe(CheckVersionLbl, "Location", new Point(535, 393));
+                SetControlPropertyThreadSafe(CheckVersionLbl, "LinkBehavior", LinkBehavior.SystemDefault);
                 SetControlPropertyThreadSafe(CheckVersionLbl, "Text", "Incompatible");
                 this.CheckVersionLbl.LinkColor = System.Drawing.Color.Red;
             }
@@ -868,11 +919,11 @@ namespace AionLauncher
         }
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            if (AutoStartTimer.Enabled == true)
+            if (AutoStartTimer.Enabled )
             {
                 AutoStartTimer.Stop();
                 btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
-            }  
+            }
             LaunchGame();
         }
         private void CheckVersionLbl_Click(object sender, EventArgs e)
@@ -895,10 +946,10 @@ namespace AionLauncher
             {
                 MessageBox.Show("The Version checker is incompatible with Windows XP, Please update your Os aged over 10 years", "Incompatible OS", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-        }      
+        }
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            if (AutoStartTimer.Enabled == true)
+            if (AutoStartTimer.Enabled )
             {
                 AutoStartTimer.Stop();
                 btnLaunch.Text = resman.GetString("btnLaunch.Text", ci);
@@ -910,11 +961,11 @@ namespace AionLauncher
         }
         private void btnExit_Click(object sender, EventArgs e)
         {
-            if (AutoStartTimer.Enabled == true) { AutoStartTimer.Enabled = false; }
+            if (AutoStartTimer.Enabled) { AutoStartTimer.Enabled = false; }
             while(this.Opacity != 0)
             {
-            this.Opacity -= 0.05;
-            Thread.Sleep(10);
+                this.Opacity -= 0.05;
+                Thread.Sleep(10);
             }
             Application.Exit();
         }

@@ -49,11 +49,14 @@ namespace AionLauncher
             int percent = int.Parse(Math.Truncate(percentage).ToString());
             progressBar1.Value = percent;
             this.percent.Text = percent.ToString() + "%";
+            this.percent.Refresh();
+            progressBar1.Refresh();
         }
         private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             percent.Text = "100%";
             progressBar1.Visible = false;
+            percent.Visible = false;
             copy.Visible = true;
             copy.Refresh();
             launchsetup();

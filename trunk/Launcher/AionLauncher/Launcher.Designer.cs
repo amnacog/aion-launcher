@@ -247,7 +247,6 @@ namespace AionLauncher
             // 
             // BannerBrowser
             // 
-            this.BannerBrowser.AllowWebBrowserDrop = false;
             this.BannerBrowser.CausesValidation = false;
             this.BannerBrowser.IsWebBrowserContextMenuEnabled = false;
             resources.ApplyResources(this.BannerBrowser, "BannerBrowser");
