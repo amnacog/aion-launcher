@@ -52,7 +52,9 @@ namespace AionLauncher
             string OPTIONS = gameSection.Get("Options");
             string LANG = gameSection.Get("Language");
             string CC = gameSection.Get("CountryCode");
-            string PATCH = patchSection.Get("Bin");
+            bool PATCH = patchSection.GetBoolean("Patch");
+            string PATCHPATH = patchSection.Get("PatchPath");
+            string PATCHVERSION = patchSection.Get("PatchVersion");
             string NEWSFEEDURL = miscSection.Get("BannerUrl");
             bool AUTOS = miscSection.GetBoolean("AutoStart");
             string LaunchLANG = miscSection.Get("LaunchLanguage");
@@ -75,17 +77,18 @@ namespace AionLauncher
             //Fill form
             Lang1.Text = LaunchLANG;
             Lang2.Text = LANG;
-            if (AUTOS == true) { AutoTrue.Checked = true; } else { AutoFalse.Checked = true; }
+            if (AUTOS ) { AutoTrue.Checked = true; } else { AutoFalse.Checked = true;}
             ipBox.Text = HOST;
             portBox.Text = PORT;
             extraOpts.Text = OPTIONS;
             newsUrl.Text = NEWSFEEDURL;
-            patchUrl.Text = PATCH;
+            patchUrl.Text = PATCHPATH;
+            desiredvrs.Text = PATCHVERSION;
             CountryCode.Text = CC;
             Settings.BannerCode = 0;
-
-            if (Launcher.ForceCheck == true)
-                FUpdateBtn.Text = "Cancel update ?";
+            Launcher.patchvrs = PATCHVERSION;
+            if (Launcher.ForceCheck )
+                FUpdateBtn.Text = "Cancel update";
         }
 
         //Events
@@ -121,14 +124,15 @@ namespace AionLauncher
             int PORT = Convert.ToInt32(portBox.Text);
             string OPTIONS = extraOpts.Text;
             string NEWSFEEDURL = newsUrl.Text;
-            string PATCH = patchUrl.Text;
+            bool PATCH = false;
+            string PATCHPATH = patchUrl.Text;
+            string PATCHVERSION = desiredvrs.Text;
             string CC = CountryCode.Text;
             bool AutoStart = AutoTrue.Checked;
+            Launcher.patchvrs = PATCHVERSION;
 
             if (Settings.BannerCode == 1)
-            {
                checkBnrBtn_Click(null, null);
-            }
             else
             {
 
@@ -152,31 +156,30 @@ namespace AionLauncher
                 IConfig patchSection = launcher.Configs["Patch"];
                 IConfig miscSection = launcher.Configs["Misc"];
 
+                if (desiredvrs.Text != "Off") { PATCH = true; } else { PATCH = false; }
+                if (PATCH) { desiredvrs.Text = PATCHVERSION; } else { desiredvrs.Text = "Off"; FUpdateBtn.Visible = false; patchUrl.Enabled = false; }
+
                 if (FUpdateBtn.Text == "We will do..")
-                {
                     Launcher.ForceCheck = true;
-                }
                 else if (FUpdateBtn.Text == "Cancelled..")
-                {
                     Launcher.ForceCheck = false;
-                }
                 string CurrentNEWSFEEDURL = miscSection.Get("BannerUrl");
                 if (CurrentNEWSFEEDURL != newsUrl.Text)
-                {
                     Launcher.ChangeBanner = newsUrl.Text;
-                }
-                if (Bannerisright == false){NEWSFEEDURL = miscSection.Get("BannerUrl");}
-
-                if(LaunchLANG != miscSection.Get("LaunchLanguage") ){
+                if (!Bannerisright)
+                    NEWSFEEDURL = miscSection.Get("BannerUrl");
+                if(LaunchLANG != miscSection.Get("LaunchLanguage")) {
                     MessageBox.Show("The launcher will restart to apply the new language", "Restart", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Application.Restart();
+                    Application.Restart();
                 }
                 connectionSection.Set("IP", HOST);
                 connectionSection.Set("LoginPort", PORT);
                 gameSection.Set("Options", OPTIONS);
                 gameSection.Set("Language", LANG);
                 gameSection.Set("CountryCode", CC);
-                patchSection.Set("Bin", PATCH);
+                patchSection.Set("PatchPath", PATCHPATH);
+                patchSection.Set("PatchVersion", PATCHVERSION);
+                patchSection.Set("Patch", PATCH);
                 miscSection.Set("BannerUrl", NEWSFEEDURL);
                 miscSection.Set("AutoStart", AutoStart);
                 miscSection.Set("LaunchLanguage", LaunchLANG);
@@ -187,7 +190,7 @@ namespace AionLauncher
         }
         private void FUpdateBtn_Click(object sender, EventArgs e)
         {
-            if (Launcher.ForceCheck == true)
+            if (Launcher.ForceCheck )
             {
                 bool fupdate = false;
                 Launcher.ForceCheck = fupdate;
@@ -213,9 +216,7 @@ namespace AionLauncher
                 try
                 {
                     if (HOST == string.Empty | HOST == "xxx.xxx.xxx.xxx")
-                    {
                         MessageBox.Show("Please make sure your ip or dns is set", "Invalid HOST", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                     else
                     {
                         socket.Connect(HOST, PORT);
@@ -225,7 +226,6 @@ namespace AionLauncher
                         checkSrvBtn.ForeColor = System.Drawing.Color.DarkGreen;
                         checkSrvBtn.Enabled = false;
                     }
-
                 }
                 catch (SocketException)
                 {
@@ -312,10 +312,20 @@ namespace AionLauncher
         {
             Settings.BannerCode = 1;
         }
-        private void Drag_Click(object sender, EventArgs e)
+
+        private void desiredvrs_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (desiredvrs.Text != "Off")
+            {
+                FUpdateBtn.Visible = true;
+                patchUrl.Enabled = true;
+            }
+            else
+            {
+                FUpdateBtn.Visible = false;
+                Launcher.ForceCheck = false;
+                patchUrl.Enabled = false;
+            }
         }
-
     }
 }

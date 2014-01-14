@@ -35,7 +35,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AionClient.ico" />
+    <EmbeddedResource Include="lib\HtmlRenderer.dll" />
     <None Include="Resources\Splah01.png" />
     <EmbeddedResource Include="lib\JacksonSoft.CustomTabControl.dll" />
     <None Include="Resources\update.png" />

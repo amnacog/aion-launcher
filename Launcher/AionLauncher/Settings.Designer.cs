@@ -59,20 +59,18 @@
             this.portBox = new System.Windows.Forms.TextBox();
             this.logPort = new System.Windows.Forms.Label();
             this.iplbl = new System.Windows.Forms.Label();
-            this.checkSrvBtn = new Glass.GlassButton();
             this.ipBox = new System.Windows.Forms.TextBox();
             this.serverLbl = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.splitContainer9 = new System.Windows.Forms.SplitContainer();
             this.extraOpts = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.checkNewsBtn = new Glass.GlassButton();
             this.newsUrl = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.splitContainer10 = new System.Windows.Forms.SplitContainer();
-            this.FUpdateBtn = new Glass.GlassButton();
+            this.desiredvrs = new System.Windows.Forms.ComboBox();
             this.patchUrl = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -81,6 +79,9 @@
             this.Reset = new System.Windows.Forms.Button();
             this.Confirm = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.checkSrvBtn = new Glass.GlassButton();
+            this.checkNewsBtn = new Glass.GlassButton();
+            this.FUpdateBtn = new Glass.GlassButton();
             this.CloseBtn = new Glass.GlassButton();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -136,7 +137,7 @@
             // 
             // Lang1
             // 
-            this.Lang1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
+            this.Lang1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
             this.Lang1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             resources.ApplyResources(this.Lang1, "Lang1");
             this.Lang1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
@@ -179,7 +180,6 @@
             this.Drag.BackColor = System.Drawing.SystemColors.ScrollBar;
             resources.ApplyResources(this.Drag, "Drag");
             this.Drag.Name = "Drag";
-            this.Drag.Click += new System.EventHandler(this.Drag_Click);
             this.Drag.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drag_MouseDown);
             // 
             // TabControl
@@ -189,19 +189,20 @@
             // 
             // 
             // 
-            this.TabControl.DisplayStyleProvider.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(203)))), ((int)(((byte)(203)))));
-            this.TabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(203)))), ((int)(((byte)(203)))));
-            this.TabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(206)))), ((int)(((byte)(203)))), ((int)(((byte)(203)))));
-            this.TabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.Empty;
-            this.TabControl.DisplayStyleProvider.FocusTrack = false;
+            this.TabControl.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.TabControl.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.TabControl.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
+            this.TabControl.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            this.TabControl.DisplayStyleProvider.FocusTrack = true;
             this.TabControl.DisplayStyleProvider.HotTrack = true;
             this.TabControl.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TabControl.DisplayStyleProvider.Opacity = 1F;
             this.TabControl.DisplayStyleProvider.Overlap = 0;
-            this.TabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(0, 0);
-            this.TabControl.DisplayStyleProvider.Radius = 3;
+            this.TabControl.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 3);
+            this.TabControl.DisplayStyleProvider.Radius = 2;
             this.TabControl.DisplayStyleProvider.ShowTabCloser = false;
-            this.TabControl.DisplayStyleProvider.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.TabControl.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
+            this.TabControl.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
             this.TabControl.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             this.TabControl.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.TabControl.HotTrack = true;
@@ -273,7 +274,7 @@
             // 
             // CountryCode
             // 
-            this.CountryCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
+            this.CountryCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
             this.CountryCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             resources.ApplyResources(this.CountryCode, "CountryCode");
             this.CountryCode.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
@@ -286,7 +287,7 @@
             // 
             // Lang2
             // 
-            this.Lang2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
+            this.Lang2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
             this.Lang2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             resources.ApplyResources(this.Lang2, "Lang2");
             this.Lang2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
@@ -431,19 +432,10 @@
             this.iplbl.ForeColor = System.Drawing.Color.Black;
             this.iplbl.Name = "iplbl";
             // 
-            // checkSrvBtn
-            // 
-            this.checkSrvBtn.BackColor = System.Drawing.Color.DimGray;
-            this.checkSrvBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.checkSrvBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.checkSrvBtn, "checkSrvBtn");
-            this.checkSrvBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.checkSrvBtn.Name = "checkSrvBtn";
-            this.checkSrvBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.checkSrvBtn.Click += new System.EventHandler(this.checkSrvBtn_Click);
-            // 
             // ipBox
             // 
+            this.ipBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.ipBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
             this.ipBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             resources.ApplyResources(this.ipBox, "ipBox");
             this.ipBox.Name = "ipBox";
@@ -507,17 +499,6 @@
             this.label10.ForeColor = System.Drawing.Color.Black;
             this.label10.Name = "label10";
             // 
-            // checkNewsBtn
-            // 
-            this.checkNewsBtn.BackColor = System.Drawing.Color.DimGray;
-            this.checkNewsBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.checkNewsBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.checkNewsBtn, "checkNewsBtn");
-            this.checkNewsBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.checkNewsBtn.Name = "checkNewsBtn";
-            this.checkNewsBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.checkNewsBtn.Click += new System.EventHandler(this.checkBnrBtn_Click);
-            // 
             // newsUrl
             // 
             this.newsUrl.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -554,6 +535,7 @@
             // splitContainer10.Panel1
             // 
             this.splitContainer10.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
+            this.splitContainer10.Panel1.Controls.Add(this.desiredvrs);
             this.splitContainer10.Panel1.Controls.Add(this.FUpdateBtn);
             this.splitContainer10.Panel1.Controls.Add(this.patchUrl);
             this.splitContainer10.Panel1.Controls.Add(this.label5);
@@ -564,23 +546,28 @@
             this.splitContainer10.Panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(218)))), ((int)(((byte)(217)))));
             this.splitContainer10.Panel2.Controls.Add(this.label6);
             // 
-            // FUpdateBtn
+            // desiredvrs
             // 
-            this.FUpdateBtn.BackColor = System.Drawing.Color.DimGray;
-            this.FUpdateBtn.ForeColor = System.Drawing.Color.DimGray;
-            this.FUpdateBtn.GlowColor = System.Drawing.Color.Gainsboro;
-            resources.ApplyResources(this.FUpdateBtn, "FUpdateBtn");
-            this.FUpdateBtn.InnerBorderColor = System.Drawing.Color.Transparent;
-            this.FUpdateBtn.Name = "FUpdateBtn";
-            this.FUpdateBtn.OuterBorderColor = System.Drawing.Color.Transparent;
-            this.FUpdateBtn.Click += new System.EventHandler(this.FUpdateBtn_Click);
+            this.desiredvrs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(231)))), ((int)(((byte)(230)))));
+            this.desiredvrs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            resources.ApplyResources(this.desiredvrs, "desiredvrs");
+            this.desiredvrs.FormattingEnabled = true;
+            this.desiredvrs.Items.AddRange(new object[] {
+            resources.GetString("desiredvrs.Items"),
+            resources.GetString("desiredvrs.Items1"),
+            resources.GetString("desiredvrs.Items2"),
+            resources.GetString("desiredvrs.Items3"),
+            resources.GetString("desiredvrs.Items4"),
+            resources.GetString("desiredvrs.Items5")});
+            this.desiredvrs.Name = "desiredvrs";
+            this.desiredvrs.SelectedIndexChanged += new System.EventHandler(this.desiredvrs_SelectedIndexChanged);
             // 
             // patchUrl
             // 
             this.patchUrl.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.patchUrl.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.AllUrl;
-            this.patchUrl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             resources.ApplyResources(this.patchUrl, "patchUrl");
+            this.patchUrl.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.patchUrl.Name = "patchUrl";
             // 
             // label5
@@ -628,6 +615,39 @@
             // notifyIcon1
             // 
             resources.ApplyResources(this.notifyIcon1, "notifyIcon1");
+            // 
+            // checkSrvBtn
+            // 
+            this.checkSrvBtn.BackColor = System.Drawing.Color.DimGray;
+            this.checkSrvBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.checkSrvBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.checkSrvBtn, "checkSrvBtn");
+            this.checkSrvBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.checkSrvBtn.Name = "checkSrvBtn";
+            this.checkSrvBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.checkSrvBtn.Click += new System.EventHandler(this.checkSrvBtn_Click);
+            // 
+            // checkNewsBtn
+            // 
+            this.checkNewsBtn.BackColor = System.Drawing.Color.DimGray;
+            this.checkNewsBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.checkNewsBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.checkNewsBtn, "checkNewsBtn");
+            this.checkNewsBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.checkNewsBtn.Name = "checkNewsBtn";
+            this.checkNewsBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.checkNewsBtn.Click += new System.EventHandler(this.checkBnrBtn_Click);
+            // 
+            // FUpdateBtn
+            // 
+            this.FUpdateBtn.BackColor = System.Drawing.Color.DimGray;
+            this.FUpdateBtn.ForeColor = System.Drawing.Color.DimGray;
+            this.FUpdateBtn.GlowColor = System.Drawing.Color.Gainsboro;
+            resources.ApplyResources(this.FUpdateBtn, "FUpdateBtn");
+            this.FUpdateBtn.InnerBorderColor = System.Drawing.Color.Transparent;
+            this.FUpdateBtn.Name = "FUpdateBtn";
+            this.FUpdateBtn.OuterBorderColor = System.Drawing.Color.Transparent;
+            this.FUpdateBtn.Click += new System.EventHandler(this.FUpdateBtn_Click);
             // 
             // CloseBtn
             // 
@@ -766,5 +786,6 @@
         private System.Windows.Forms.ComboBox CountryCode;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ComboBox desiredvrs;
     }
 }
